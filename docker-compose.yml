@@ -1,0 +1,125 @@
+version: '3.8'
+
+services:
+  elb:
+    image: haproxy
+    ports:
+      - "80:80"
+    networks:
+      - local
+    volumes:
+      - ./haproxy:/usr/local/etc/haproxy
+
+  main-db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: ${MAIN_DB_USERNAME}
+      POSTGRES_PASSWORD: ${MAIN_DB_PASSWORD}
+      POSTGRES_DB: ${MAIN_DB_NAME}
+    expose:
+      - "${MAIN_DB_PORT}"
+    ports:
+      - "${MAIN_DB_PORT}:${MAIN_DB_PORT}"
+    command: -p ${MAIN_DB_PORT}
+    networks:
+      - local
+    volumes:
+      - main-db-data:/var/lib/postgresql/data
+
+  authorization-db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: ${AUTHORIZATION_DB_USERNAME}
+      POSTGRES_PASSWORD: ${AUTHORIZATION_DB_PASSWORD}
+      POSTGRES_DB: ${AUTHORIZATION_DB_NAME}
+    expose:
+      - "${AUTHORIZATION_DB_PORT}"
+    ports:
+      - "${AUTHORIZATION_DB_PORT}:${AUTHORIZATION_DB_PORT}"
+    command: -p ${AUTHORIZATION_DB_PORT}
+    networks:
+      - local
+    volumes:
+      - auth-db-data:/var/lib/postgresql/data
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5671:5671"
+      - "5672:5672"
+      - "15671:15671"
+      - "15672:15672"
+    networks:
+      - local
+
+  main-service:
+    build: ./MainService
+    environment:
+      RABBIT_MQ_HOST: rabbitmq
+      RABBIT_MQ_PORT: ${RABBIT_MQ_PORT}
+      RABBIT_MQ_USERNAME: ${RABBIT_MQ_USERNAME}
+      RABBIT_MQ_PASSWORD: ${RABBIT_MQ_PASSWORD}
+      DB_USERNAME: ${MAIN_DB_USERNAME}
+      DB_PASSWORD: ${MAIN_DB_PASSWORD}
+      DB_PORT: ${MAIN_DB_PORT}
+      DB_HOSTNAME: main-db
+      DB_NAME: ${MAIN_DB_NAME}
+      APP_PORT: 8081
+    ports:
+      - "8081:8081"
+    networks:
+      - local
+    depends_on:
+      - main-db
+      - rabbitmq
+
+  notification-service:
+    build: ./NotificationService
+    environment:
+      RABBIT_MQ_HOST: rabbitmq
+      RABBIT_MQ_PORT: ${RABBIT_MQ_PORT}
+      RABBIT_MQ_USERNAME: ${RABBIT_MQ_USERNAME}
+      RABBIT_MQ_PASSWORD: ${RABBIT_MQ_PASSWORD}
+    networks:
+      - local
+    depends_on:
+      - rabbitmq
+
+  keycloak_web:
+    image: quay.io/keycloak/keycloak:23.0.2
+    container_name: keycloak_web
+    networks:
+      - local
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://host.docker.internal:${AUTHORIZATION_DB_PORT}/${AUTHORIZATION_DB_NAME}
+      KC_DB_USERNAME: ${AUTHORIZATION_DB_USERNAME}
+      KC_DB_PASSWORD: ${AUTHORIZATION_DB_PASSWORD}
+
+      KC_HOSTNAME: localhost
+      KC_HOSTNAME_PORT: 8083
+      KC_HOSTNAME_STRICT: "false"
+      KC_HOSTNAME_STRICT_HTTPS: "false"
+
+      KC_LOG_LEVEL: info
+      KC_METRICS_ENABLED: "true"
+      KC_HEALTH_ENABLED: "true"
+
+      PROXY_ADDRESS_FORWARDING: true
+      KEYCLOAK_FRONTEND_URL: localhost/oauth
+
+    command: start-dev --http-port=8083
+    depends_on:
+      - authorization-db
+    ports:
+      - "8083:8083"
+
+volumes:
+  main-db-data:
+  auth-db-data:
+
+networks:
+  local:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.host_binding_ipv4: "127.0.0.1"
