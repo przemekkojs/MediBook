@@ -108,8 +108,8 @@ services:
       KC_METRICS_ENABLED: "true"
       KC_HEALTH_ENABLED: "true"
 
-      KEYCLOAK_ADMIN: ${AUTHORIZATION_DB_USERNAME}
-      KEYCLOAK_ADMIN_PASSWORD: ${AUTHORIZATION_DB_PASSWORD}
+      KEYCLOAK_ADMIN: ${KEYCLOAK_USERNAME}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_PASSWORD}
 
 
     command: start-dev --http-port=8083 --https-port=8084 --http-relative-path=\oauth --https-certificate-file=/etc/ssl/private/test.pem --https-certificate-key-file=/etc/ssl/private/test.key --hostname-strict-backchannel=true
