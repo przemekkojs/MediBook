@@ -6,9 +6,27 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    expose:
+      - "443"
+    networks:
+      mynet:
+        aliases:
+          - medibook.pl
     volumes:
       - ./haproxy:/usr/local/etc/haproxy
       - ./ssl://etc/ssl/private
+
+#  coredns:
+#    image: coredns/coredns:1.11.1
+#    container_name: coredns
+#    volumes:
+#      - ./Corefile:/etc/Corefile
+#    command: -conf /etc/Corefile/Corefile
+#    ports:
+#      - "5353:53/udp"
+#      - "5353:53/tcp"
+#    restart: unless-stopped
+
 
   main-db:
     image: postgres:16
@@ -26,6 +44,8 @@ services:
       timeout: 10s
       retries: 5
     command: -p ${MAIN_DB_PORT}
+    networks:
+      - mynet
     volumes:
       - main-data:/var/lib/postgresql/data
 
@@ -45,6 +65,8 @@ services:
     ports:
       - "${AUTHORIZATION_DB_PORT}:${AUTHORIZATION_DB_PORT}"
     command: -p ${AUTHORIZATION_DB_PORT}
+    networks:
+      - mynet
     volumes:
       - auth-db-data:/var/lib/postgresql/data
 
@@ -55,25 +77,8 @@ services:
       - "5672:5672"
       - "15671:15671"
       - "15672:15672"
-
-  main-service:
-    build: ./MainService
-    environment:
-      RABBIT_MQ_HOST: rabbitmq
-      RABBIT_MQ_PORT: ${RABBIT_MQ_PORT}
-      RABBIT_MQ_USERNAME: ${RABBIT_MQ_USERNAME}
-      RABBIT_MQ_PASSWORD: ${RABBIT_MQ_PASSWORD}
-      DB_USERNAME: ${MAIN_DB_USERNAME}
-      DB_PASSWORD: ${MAIN_DB_PASSWORD}
-      DB_PORT: ${MAIN_DB_PORT}
-      DB_HOSTNAME: main-db
-      DB_NAME: ${MAIN_DB_NAME}
-      APP_PORT: 8081
-    ports:
-      - "8081:8081"
-    depends_on:
-      - main-db
-      - rabbitmq
+    networks:
+      - mynet
 
   notification-service:
     build: ./NotificationService
@@ -84,10 +89,11 @@ services:
       RABBIT_MQ_PASSWORD: ${RABBIT_MQ_PASSWORD}
     depends_on:
       - rabbitmq
+    networks:
+      - mynet
 
-  keycloak_web:
+  keycloak-web:
     image: quay.io/keycloak/keycloak:24.0.4
-    container_name: keycloak_web
     environment:
       KC_DB: postgres
       KC_DB_URL: jdbc:postgresql://authorization-db:${AUTHORIZATION_DB_PORT}/${AUTHORIZATION_DB_NAME}
@@ -96,13 +102,14 @@ services:
 
       KC_HOSTNAME_STRICT: false
       KC_HOSTNAME_STRICT_HTTPS: false
-      KC_HTTP_PROXY: "https://localhost/"
-      KC_PROXY_TRUSTED_ADDRESSES: "https://localhost/"
+      KC_HTTP_PROXY: "https://medibook.pl/"
+      KC_PROXY_TRUSTED_ADDRESSES: "https://medibook.pl/"
       KC_SERVICE_FQDN: keycloak
       KC_PROXY_ADDRESS_FORWARDING: true
       KC_PROXY_HEADERS: "xforwarded"
-      KC_HOSTNAME_URL: "http://localhost:8083/oauth/"
-      KC_HOSTNAME_ADMIN_URL: "https://localhost:8084/oauth/"
+      KEYCLOAK_FRONTEND_URL: "https://medibook.pl/oauth/"
+      KC_HOSTNAME_URL: "https://medibook.pl/oauth/"
+      KC_HOSTNAME_ADMIN_URL: "https://medibook.pl:8084/oauth/"
 
       KC_LOG_LEVEL: info
       KC_METRICS_ENABLED: "true"
@@ -112,7 +119,7 @@ services:
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_PASSWORD}
 
 
-    command: start-dev --http-port=8083 --https-port=8084 --http-relative-path=\oauth --https-certificate-file=/etc/ssl/private/test.pem --https-certificate-key-file=/etc/ssl/private/test.key --hostname-strict-backchannel=true
+    command: start-dev --http-port=8083 --https-port=8084 --http-relative-path=\oauth --https-certificate-file=/etc/ssl/private/domain.crt --https-certificate-key-file=/etc/ssl/private/domain.key --hostname-strict-backchannel=true
     depends_on:
       - authorization-db
     volumes:
@@ -120,6 +127,37 @@ services:
     ports:
       - "8083:8083"
       - "8084:8084"
+    networks:
+      - mynet
+
+  main-service:
+    build: ./MainService
+    environment:
+      RABBIT_MQ_HOST: rabbitmq
+      RABBIT_MQ_PORT: ${RABBIT_MQ_PORT}
+      RABBIT_MQ_USERNAME: ${RABBIT_MQ_USERNAME}
+      RABBIT_MQ_PASSWORD: ${RABBIT_MQ_PASSWORD}
+      MAIN_DB_USERNAME: ${MAIN_DB_USERNAME}
+      MAIN_DB_PASSWORD: ${MAIN_DB_PASSWORD}
+      MAIN_DB_PORT: ${MAIN_DB_PORT}
+      DB_HOSTNAME: main-db
+      MAIN_DB_NAME: ${MAIN_DB_NAME}
+      MAIN_APP_PORT: ${MAIN_APP_PORT}
+      ISSUER_URI: https://medibook.pl
+      ISSUER_REALM: client
+    ports:
+      - "8081:8081"
+    volumes:
+      - ./ssl:/etc/ssl/private
+    depends_on:
+      - main-db
+      - rabbitmq
+      - keycloak-web
+    networks:
+      - mynet
+
+networks:
+  mynet:
 
 volumes:
   main-data:
