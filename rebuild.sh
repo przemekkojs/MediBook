@@ -10,6 +10,10 @@ echo "Rebuilding main service"
 
 docker compose build main-service --no-cache
 
+echo Rebuilding keycloak service
+
+docker compose build keycloak_web --no-cache
+
 echo "Rebuilding notification service"
 
 docker compose build notification-service --no-cache
