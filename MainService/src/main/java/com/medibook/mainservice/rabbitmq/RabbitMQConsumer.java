@@ -22,6 +22,7 @@ public class RabbitMQConsumer {
     public void listenClient(String message) {
         System.out.println("Received message: " + message);
     }
+
     @RabbitListener(
             bindings = @QueueBinding(
                     value = @Queue(value = "keycloak-notification-client"),

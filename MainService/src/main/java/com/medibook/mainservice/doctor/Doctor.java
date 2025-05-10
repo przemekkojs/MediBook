@@ -1,4 +1,4 @@
-package com.medibook.mainservice.place;
+package com.medibook.mainservice.doctor;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,17 +8,14 @@ import lombok.*;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
+@Getter@Setter
 @Builder
 @ToString
 @EqualsAndHashCode
-public class Place {
-
+public class Doctor {
     @Id
-    private long id;
-    @Column
-    private String name;
-    @Column
-    private String address;
+    private String id;
+    @Column(unique = true)
+    private String username;
+
 }
