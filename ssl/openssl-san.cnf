@@ -1,0 +1,23 @@
+[ req ]
+default_bits       = 2048
+default_md         = sha256
+prompt             = no
+distinguished_name = req_distinguished_name
+req_extensions     = req_ext
+
+[ req_distinguished_name ]
+C  = PL
+ST = Silesia
+L  = Wroclaw
+O  = MediBook
+OU = MediBook
+CN = medibook.pl
+
+[ req_ext ]
+subjectAltName = @alt_names
+
+[ alt_names ]
+DNS.1   = localhost
+DNS.2   = elb
+DNS.3   = keycloak_web
+DNS.4   = main-service
