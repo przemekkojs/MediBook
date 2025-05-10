@@ -1,4 +1,6 @@
 package com.medibook.mainservice.client.dto;
 
-public record ClientCreateDTO(String id, String username) {
+public record ClientCreateDTO(String userId, ClientCreateDetailsDto details) {
 }
+
+
