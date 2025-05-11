@@ -20,10 +20,14 @@ public class WorkhoursServiceImpl implements IWorkhoursService {
     private final Validator<EditWorkhoursDto> editWorkhoursValidator;
 
     @Override
-    public void createWorkHours(CreateWorkhoursDto dto, String doctorId) {
+    public void createWorkHours(CreateWorkhoursDto dto, String doctorUsername) {
         createWorkhoursValidator.validate(dto);
 
-        Doctor doctor = doctorService.getDoctorById(doctorId);
+        Doctor doctor = doctorService.getDoctorByUsername(doctorUsername);
+
+        if(workhoursRepository.findByDayAndDoctorId(dto.day(),doctor.getId()) != null){
+            throw WorkhourMessage.WORKHOURS_EXIST;
+        }
 
         if (doctor == null) {
             throw WorkhourMessage.DOCTOR_NOT_FOUND;
