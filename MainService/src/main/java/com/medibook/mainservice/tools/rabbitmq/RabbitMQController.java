@@ -1,4 +1,4 @@
-package com.medibook.mainservice.rabbitmq;
+package com.medibook.mainservice.tools.rabbitmq;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -34,6 +34,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.cloud:spring-cloud-stream-binder-rabbit")
+    implementation("org.keycloak:keycloak-admin-client:24.0.3")
+    implementation("org.keycloak:keycloak-core:24.0.3")
 //  BEGIN_PK:
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.cloud:spring-cloud-starter-bootstrap")

@@ -1,4 +1,4 @@
-package com.medibook.mainservice.rabbitmq;
+package com.medibook.mainservice.tools.rabbitmq;
 
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;

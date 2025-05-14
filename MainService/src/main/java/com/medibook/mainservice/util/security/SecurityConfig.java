@@ -1,4 +1,4 @@
-package com.medibook.mainservice.security;
+package com.medibook.mainservice.util.security;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -26,6 +26,8 @@ public class SecurityConfig {
     private String clientIssuer;
     @Value("${spring.security.oauth2.resourceserver.jwt.doctor.issuer-uri}")
     private String doctorIssuer;
+    @Value("${spring.security.oauth2.resourceserver.jwt.admin.issuer-uri}")
+    private String adminIssuer;
 
 
     interface AuthoritiesConverter extends Converter<Map<String, Object>, Collection<GrantedAuthority>> {}
@@ -67,7 +69,9 @@ public class SecurityConfig {
 
         JwtIssuerAuthenticationManagerResolver authenticationManagerResolver =
                 new JwtIssuerAuthenticationManagerResolver(issuer -> {
-                    if (!Objects.equals(issuer, clientIssuer) && !Objects.equals(issuer, doctorIssuer)) {
+                    if (!Objects.equals(issuer, clientIssuer)
+                            && !Objects.equals(issuer, doctorIssuer)
+                            && !Objects.equals(issuer, adminIssuer)) {
                         throw new JwtException("Untrusted issuer: " + issuer);
                     }
 

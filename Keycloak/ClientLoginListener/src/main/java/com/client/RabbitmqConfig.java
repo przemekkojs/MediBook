@@ -35,7 +35,6 @@ public class RabbitmqConfig {
         String routingKey = ROUTING_KEY_PREFIX
                 + "." + removeDots(session.realms().getRealm(event.getRealmId()).getName())
                 + "." + (event.getError() != null ? "ERROR" : "SUCCESS")
-                + "." + removeDots(event.getClientId())
                 + "." + event.getType();
 
         log.info(routingKey);
