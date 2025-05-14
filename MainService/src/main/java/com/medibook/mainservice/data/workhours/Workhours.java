@@ -1,10 +1,7 @@
 package com.medibook.mainservice.data.workhours;
 
 import com.medibook.mainservice.data.doctor.Doctor;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.*;
@@ -22,6 +19,7 @@ import java.sql.Time;
 public class Workhours {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
     @Column(nullable = false)
     @Max(7)

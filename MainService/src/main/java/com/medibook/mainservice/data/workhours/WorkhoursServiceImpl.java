@@ -44,10 +44,16 @@ public class WorkhoursServiceImpl implements IWorkhoursService {
     }
 
     @Override
-    public void updateWorkHours(EditWorkhoursDto dto, long id) {
+    public void updateWorkHours(EditWorkhoursDto dto, int day, String username) {
         editWorkhoursValidator.validate(dto);
 
-        Workhours workhours = getWorkhoursById(id);
+        Doctor doctor = doctorService.getDoctorByUsername(username);
+
+        if(doctor == null){
+            throw WorkhourMessage.DOCTOR_NOT_FOUND;
+        }
+
+        Workhours workhours = workhoursRepository.findByDayAndDoctorId(day,doctor.getId());
 
         if (workhours == null) {
             throw WorkhourMessage.WORKHOURS_NOT_FOUND;
@@ -72,6 +78,6 @@ public class WorkhoursServiceImpl implements IWorkhoursService {
 
     @Override
     public List<Workhours> getWorkHoursForDoctor(String doctorId) {
-        return List.of();
+        return workhoursRepository.findByDoctorId(doctorId);
     }
 }

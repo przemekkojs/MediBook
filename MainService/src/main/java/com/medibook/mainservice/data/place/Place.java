@@ -1,10 +1,7 @@
 package com.medibook.mainservice.data.place;
 
 import com.medibook.mainservice.data.doctor.Doctor;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -18,6 +15,7 @@ import lombok.*;
 public class Place {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
     @Column
     private String name;

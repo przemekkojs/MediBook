@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface IWorkhoursService {
     void createWorkHours(CreateWorkhoursDto dto, String doctorId);
-    void updateWorkHours(EditWorkhoursDto dto, long id);
+    void updateWorkHours(EditWorkhoursDto dto, int day, String username);
     void deleteWorkHours(long id);
     Workhours getWorkhoursById(long id);
     List<Workhours> getWorkHoursForDoctor(String doctorId);
