@@ -1,0 +1,10 @@
+Primary: #1976D2
+Accent: #00BFA5
+Light Background: #F9FAFB
+Cards Background: #FFFFFF
+Dark Text: #263238
+Body Text: #455A64
+Button Hover: #1565C0
+Error: #E53935
+Success: #43A047
+Disabled: #B0BEC5

@@ -1,0 +1,61 @@
+html {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.bg-primary {
+    background-color: #1976D2;
+}
+
+.txt-primary {
+    color: #1976D2;
+}
+
+.bg-accent {
+    background-color: #00BFA5;
+}
+
+.txt-accent {
+    color: #00BFA5;
+}
+
+.bg-light {
+    background-color: #F9FAFB;
+}
+
+.bg-card {
+    background-color: #FFFFFF;
+    box-shadow: 3px 3px 3px gray;
+}
+
+.bg-card:hover {
+    box-shadow: 5px 5px 5px gray;
+    transition-duration: 0.2s;
+}
+
+.txt-header {
+    color: #263238;
+}
+
+.txt-body {
+    color: #455A64;
+}
+
+.btn-hover {
+    background-color: #1565C0;
+}
+
+.txt-error {
+    color: #E53935;
+}
+
+.txt-success {
+    color: #43A047;
+}
+
+.bg-success {
+    background-color: #43A047;
+}
+
+.bg-disabled {
+    background-color: #B0BEC5;
+}
