@@ -1,5 +1,6 @@
 package com.medibook.mainservice.data.doctor;
 
+import com.medibook.mainservice.data.procedure.Procedure;
 import com.medibook.mainservice.data.workhours.Workhours;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -23,4 +24,6 @@ public class Doctor {
     private String username;
     @OneToMany
     private List<Workhours> workhours;
+    @OneToMany
+    private List<Procedure> procedures;
 }
