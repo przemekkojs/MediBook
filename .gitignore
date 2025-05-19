@@ -1,1 +1,8 @@
 .idea/
+.env
+ssl/
+client-realm-export.json
+doctor-realm-export.json
+master-realm-export.json
+*.crt
+docker-compose.yml
