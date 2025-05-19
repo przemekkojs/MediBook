@@ -28,7 +28,7 @@ public class RabbitMQConsumer {
                             name = "keycloak-notification",
                             autoDelete = "true",
                             ignoreDeclarationExceptions = "true"),
-                    key = "KK.EVENT.client.SUCCESS.REGISTER")
+                    key = "KK.EVENT.SUCCESS.REGISTER.client")
     )
     public void listenClient(String message) throws JsonProcessingException {
         System.out.println(message);
@@ -46,7 +46,7 @@ public class RabbitMQConsumer {
                             name = "keycloak-notification",
                             autoDelete = "true",
                             ignoreDeclarationExceptions = "true"),
-                    key = "KK.EVENT.doctor.SUCCESS.REGISTER")
+                    key = "KK.EVENT.SUCCESS.REGISTER.client")
     )
     public void listenDoctor(String message) throws JsonProcessingException {
         System.out.println(message);
