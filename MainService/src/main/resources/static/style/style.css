@@ -37,7 +37,7 @@ html {
 }
 
 .txt-header {
-    color: #263238;
+    color: #F9FAFB;
 }
 
 .txt-body {
@@ -62,4 +62,8 @@ html {
 
 .bg-disabled {
     background-color: #B0BEC5;
+}
+
+.img-light {
+    color: inherit
 }

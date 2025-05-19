@@ -13,15 +13,20 @@
         <link rel="icon" type="image/x-icon" href="/images/icon.png" />
         <link rel="stylesheet" href="/css/bootstrap.min.css" />
         <link rel="stylesheet" href="/css/styles.css" /> <!-- !!! MUSI BYĆ PO BOOTSTRAPIE !!! -->        
+
+        <link rel="icon" type="image/x-icon" href="images/icon.png" />
+        <link rel="stylesheet" href="style/bootstrap.min.css" />
+        <link rel="stylesheet" href="style/style.css" /> <!-- !!! MUSI BYĆ PO BOOTSTRAPIE !!! -->        
     </head>
+
     <body class="min-vh-100 d-flex flex-column m-0 txt-body">
         <header>
-            <nav class="navbar navbar-expand-lg navbar-light bg-primary border-bottom txt-header">
+            <nav class="navbar navbar-expand-lg navbar-light bg-primary border-bottom pe-5">
                 <div class="container-fluid">
                     <a class="navbar-brand d-flex align-items-center" href="#">
-                        <img src="images/icon.png" alt="Logo strony - książka z krzyżem lekarskim" width="40" height="40" class="me-2">
+                        <img src="images/logo.png" alt="Logo strony - książka z krzyżem lekarskim" width="40" height="40" class="me-2 rounded">
 
-                        <span>MediBook</span>
+                        <span class="txt-header">MediBook</span>
                     </a>
 
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown">
@@ -30,19 +35,27 @@
 
                     <div class="collapse navbar-collapse" id="navbarNavDropdown">
                         <ul class="navbar-nav ms-auto">
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Strona główna</a>
-                            </li>
 
                             <!-- To trzeba jakoś programowo wypełniać -->
 
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="help-ropdown" role="button" data-bs-toggle="dropdown">
-                                    Pomoc
+                                <a class="nav-link dropdown-toggle txt-header" href="#" id="help-dropdown" role="button" data-bs-toggle="dropdown">
+                                    Pomoc <img src="images/icons/help.svg" class="w-25 h-25 img-light">
                                 </a>
 
-                                <ul class="dropdown-menu" aria-labelledby="help-ropdown">
+                                <ul class="dropdown-menu" aria-labelledby="help-dropdown">
                                     <li><a class="dropdown-item" href="#">Kontakt</a></li>
+                                </ul>
+                            </li>
+
+                            <li class="nav-item dropdown me-5">
+                                <a class="nav-link dropdown-toggle txt-header" href="#" id="help-dropdown" role="button" data-bs-toggle="dropdown">
+                                    Konto <img src="images/icons/person.svg" class="w-25 h-25 img-light">
+                                </a>
+
+                                <ul class="dropdown-menu" aria-labelledby="help-dropdown">
+                                    <li><a class="dropdown-item" href="#">Ustawienia</a></li>
+                                    <li><a class="dropdown-item" href="#">Wyloguj</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -58,11 +71,12 @@
         </main>
 
         <footer>
-            <div class="text-center py-4 bg-primary border-top">
+            <div class="text-center py-4 bg-primary border-top txt-header">
                 &copy; MediBook 2025
             </div>
         </footer>
     </body>
 
     <script src="/js/bootstrap.bundle.min.js"></script>
+    <script src="../static/js/bootstrap.bundle.min.js"></script>
 </html>
