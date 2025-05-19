@@ -6,3 +6,5 @@ doctor-realm-export.json
 master-realm-export.json
 *.crt
 docker-compose.yml
+rebuild.bat
+rebuild.sh
