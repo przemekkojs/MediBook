@@ -95,8 +95,8 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(requests -> {
             requests.requestMatchers("/me").authenticated();
-            requests.requestMatchers("/client").hasAuthority("CLIENT");
-            requests.requestMatchers("/doctor").hasAuthority("DOCTOR");
+            requests.requestMatchers("/api/v1/*/client/**").hasAuthority("CLIENT");
+            requests.requestMatchers("/api/v1/*/doctor/**").hasAuthority("DOCTOR");
             requests.anyRequest().permitAll();
         });
 

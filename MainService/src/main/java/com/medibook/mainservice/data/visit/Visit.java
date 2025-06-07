@@ -1,10 +1,14 @@
 package com.medibook.mainservice.data.visit;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.medibook.mainservice.data.client.Client;
+import com.medibook.mainservice.data.doctor.Doctor;
+import com.medibook.mainservice.data.procedure.Procedure;
+import jakarta.persistence.*;
 import lombok.*;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Entity
 @AllArgsConstructor
@@ -19,5 +23,19 @@ public class Visit {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Client client;
+
+    private LocalTime startTime;
+
+    private LocalDate date;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Procedure procedure;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Doctor doctor;
+
+    private BigDecimal totalPrice;
 
 }

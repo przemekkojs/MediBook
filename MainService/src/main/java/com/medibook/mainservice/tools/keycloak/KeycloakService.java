@@ -79,6 +79,7 @@ public class KeycloakService {
 
         return new ClientDTO(
                 user.getId(),
+                user.getUsername(),
                 user.getFirstName(),
                 user.getLastName(),
                 user.getEmail(),
@@ -119,6 +120,27 @@ public class KeycloakService {
         );
     }
 
+    public ClientDTO getClientByUsername(String username){
+        Keycloak keycloak = getKeycloak(clientRealm);
+
+        List<UserRepresentation> userResource = keycloak.realm(clientRealm).users().search(username);
+
+        if(userResource.isEmpty()){
+            return null;
+        }
+
+        UserRepresentation user = userResource.get(0);
+
+        return new ClientDTO(
+                user.getId(),
+                user.getUsername(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                ""
+        );
+    }
+
     public List<DoctorDto> getDoctors(){
         Keycloak keycloak = getKeycloak(doctorRealm);
 
@@ -138,6 +160,7 @@ public class KeycloakService {
 
         return userResources.stream().map(userResource -> new ClientDTO(
                 userResource.getId(),
+                null,
                 userResource.getFirstName(),
                 userResource.getLastName(),
                 userResource.getEmail(),
