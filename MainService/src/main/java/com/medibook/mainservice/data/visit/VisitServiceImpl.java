@@ -66,7 +66,9 @@ public class VisitServiceImpl implements IVisitService {
                 .totalPrice(procedure.getPrice())
                 .build();
 
-        return visitRepository.save(visit);
+        visit = visitRepository.save(visit);
+
+        return visit;
     }
 
     @Override

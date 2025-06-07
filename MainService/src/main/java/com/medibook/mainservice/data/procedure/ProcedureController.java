@@ -57,7 +57,7 @@ public class ProcedureController {
         return ResponseEntity.ok(List.of());
     }
 
-    @PostMapping
+    @PostMapping("/doctor")
     public ResponseEntity<ProcedureDto> createProcedure(@RequestBody CreateProcedureDto dto, JwtAuthenticationToken auth) {
         String username = auth.getToken().getClaimAsString(StandardClaimNames.PREFERRED_USERNAME);
 
@@ -68,7 +68,7 @@ public class ProcedureController {
         );
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/doctor/{id}")
     public ResponseEntity<ProcedureDto> editProcedure(@RequestBody EditProcedureDto dto, @PathVariable("id") long id) {
         return ResponseEntity.ok(
                 procedureMapper.toProcedureDto(
@@ -77,7 +77,7 @@ public class ProcedureController {
         );
     }
 
-    @DeleteMapping
+    @DeleteMapping("/doctor/{id}")
     public void deleteProcedure(long id) {
         procedureService.deleteProcedure(id);
     }

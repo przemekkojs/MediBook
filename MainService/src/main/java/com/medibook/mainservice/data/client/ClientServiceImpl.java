@@ -1,6 +1,9 @@
 package com.medibook.mainservice.data.client;
 
 import com.medibook.mainservice.data.client.dto.ClientCreateDTO;
+import com.medibook.mainservice.data.client.dto.ClientCreateDetailsDto;
+import com.medibook.mainservice.data.client.dto.ClientDTO;
+import com.medibook.mainservice.tools.keycloak.KeycloakService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -8,19 +11,31 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ClientServiceImpl implements IClientService {
     private final ClientRepository clientRepository;
+    private final KeycloakService keycloakService;
 
-    public void createClient(ClientCreateDTO dto){
+    public Client createClient(ClientCreateDTO dto){
 
         Client client = Client.builder()
                 .id(dto.userId())
                 .username(dto.details().username())
                 .build();
 
-        clientRepository.save(client);
+        return clientRepository.save(client);
     }
 
     @Override
     public Client getClientByUsername(String username) {
-        return clientRepository.findByUsername(username);
+        Client client =  clientRepository.findByUsername(username);
+
+        if(client == null){
+            ClientDTO dto = keycloakService.getClientByUsername(username);
+
+            client = dto == null ? null : createClient(new ClientCreateDTO(
+                    dto.id(),
+                    new ClientCreateDetailsDto(dto.username())
+            ));
+        }
+
+        return client;
     }
 }

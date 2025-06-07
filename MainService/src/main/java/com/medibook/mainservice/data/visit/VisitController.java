@@ -52,7 +52,7 @@ public class VisitController {
         );
     }
 
-    @PostMapping
+    @PostMapping("/client")
     public ResponseEntity<VisitDto> createVisit(@RequestBody CreateVisitDto visitDto, JwtAuthenticationToken auth) {
         String username = auth.getToken().getClaimAsString(StandardClaimNames.PREFERRED_USERNAME);
 
