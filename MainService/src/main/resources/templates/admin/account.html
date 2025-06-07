@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/admin/layout-admin}">
+
+    <head>
+        <title layout:fragment="title">Moje konto</title>
+    </head>
+
+    <body>
+        <section layout:fragment="content">
+            <div class="container mt-5">
+                <h1 class="mb-4">Moje konto</h1>
+
+                <div class="row">
+                    <div class="col-md-3 text-center mb-4 mb-md-0">
+                        <img src="/images/avatar.png" alt="Zdjęcie użytkownika" class="img-thumbnail mb-2" style="width: 150px; height: 150px; object-fit: cover;">
+                        <div><small>Zdjęcie użytkownika</small></div>
+                    </div>
+
+                    <div class="col-md-9">
+                        <form class="row g-3">
+                            <div class="col-md-6">
+                                <label for="name" class="form-label">Imię</label>
+                                <input type="text" class="form-control" id="name" placeholder="Jan" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="surname" class="form-label">Nazwisko</label>
+                                <input type="text" class="form-control" id="surname" placeholder="Kowalski" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="age" class="form-label">Data urodzenia</label>
+                                <input type="date" class="form-control" id="age" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="pesel" class="form-label">PESEL</label>
+                                <input type="number" class="form-control" id="pesel" placeholder="0123456789" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="email" class="form-label">Adres e-mail</label>
+                                <input type="email" class="form-control" id="email" placeholder="jan.kowalski@example.com" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="phone" class="form-label">Numer telefonu</label>
+                                <input type="tel" class="form-control" id="phone" name="phone" placeholder="123-45-678" pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}" required>
+                            </div>
+
+                            <div class="col-12 text-end">
+                                <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            
+            <script>
+                // Tu trzeba AJAXem się bawić
+            </script>
+        </section>
+    </body>
+</html>

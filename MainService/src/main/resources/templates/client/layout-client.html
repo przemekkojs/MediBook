@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+
+    <body>
+        <th:block layout:fragment="extra-navbar">
+            <li class="nav-item dropdown me-1">
+                <a class="nav-link dropdown-toggle txt-header" href="#" id="visits-dropdown" role="button" data-bs-toggle="dropdown">
+                    Wizyty <img src="/images/icons/person.svg" class="w-25 h-25 img-light">
+                </a>
+
+                <ul class="dropdown-menu" aria-labelledby="visits-dropdown">
+                    <li><a class="dropdown-item" th:href="@{/client/myvisits}">Moje wizyty</a></li>
+                    <li><a class="dropdown-item" th:href="@{/client/signup}">Zapisz się</a></li>
+                </ul>
+            </li>
+        </th:block>
+    </body>
+</html>

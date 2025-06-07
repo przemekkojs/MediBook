@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout}">
+      layout:decorate="~{/client/layout-client}">
 
     <head>
         <title layout:fragment="title">Szczegóły wizyty</title>
@@ -9,7 +9,47 @@
 
     <body>
         <section layout:fragment="content">
-            
+            <h1 class="mb-4">Szczegóły wizyty</h1>
+
+            <div class="card p-3 shadow-sm">
+                <div class="row mb-2">
+                    <div class="col-sm-3 fw-bold">Pacjent:</div>
+                    <div class="col-sm-9" id="patient"></div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-3 fw-bold">Od:</div>
+                    <div class="col-sm-9" id="begin"></div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-3 fw-bold">Do:</div>
+                    <div class="col-sm-9" id="end"></div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-3 fw-bold">Data:</div>
+                    <div class="col-sm-9" id="date"></div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-3 fw-bold">Sala:</div>
+                    <div class="col-sm-9" id="room"></div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3 fw-bold">Miejsce:</div>
+                    <div class="col-sm-9" id="place"></div>
+                </div>
+            </div>
+
+            <script>
+                const patient = document.getElementById('patient');
+                const begin = document.getElementById('begin');
+                const end = document.getElementById('end');
+                const date = document.getElementById('date');
+                const room = document.getElementById('room');
+                const place = document.getElementById('place');
+
+                function load(id) {
+                    
+                }
+            </script>
         </section>
     </body>
 </html>
