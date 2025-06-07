@@ -100,6 +100,8 @@ services:
       RABBIT_MQ_PORT: ${RABBIT_MQ_PORT}
       RABBIT_MQ_USERNAME: ${RABBIT_MQ_USERNAME}
       RABBIT_MQ_PASSWORD: ${RABBIT_MQ_PASSWORD}
+      MAIL_USERNAME: ${MAIL_USERNAME}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
     depends_on:
       - rabbitmq
     networks:
