@@ -12,7 +12,7 @@ public class RabbitMQConsumer {
 
     @RabbitListener(queues = RabbitMQConfig.QUEUE_NAME)
     public void listen(String message) {
-        mailManager.sendEmail("kacper.a.wieczorek1@gmail.com","Test",message);
+        mailManager.sendEmail("Placeholder","Test",message);
         System.out.println("Received message: " + message);
     }
 
