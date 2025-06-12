@@ -26,6 +26,13 @@ public class ProcedureServiceImpl implements IProcedureService {
 
     private final IDoctorService doctorService;
 
+    public ProcedureServiceImpl(ProcedureRepository procedureRepository, Validator<CreateProcedureDto> createProcedureValidator, Validator<EditProcedureDto> editProcedureValidator, IDoctorService doctorService) {
+        this.procedureRepository = procedureRepository;
+        this.createProcedureValidator = createProcedureValidator;
+        this.editProcedureValidator = editProcedureValidator;
+        this.doctorService = doctorService;
+    }
+
 
     @Override
     public Procedure getProcedure(long id) {

@@ -19,8 +19,17 @@ import java.util.List;
 public class DoctorController {
     private final KeycloakService keycloakService;
 
+    public DoctorController(KeycloakService keycloakService) {
+        this.keycloakService = keycloakService;
+    }
+
     @GetMapping
     public ResponseEntity<List<DoctorDto>> getDoctors() {
         return ResponseEntity.ok(keycloakService.getDoctors());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<DoctorDto> getDoctor(String id) {
+        return ResponseEntity.ok(keycloakService.getDoctor(id));
     }
 }

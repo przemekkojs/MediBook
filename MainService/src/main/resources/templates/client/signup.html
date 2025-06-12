@@ -63,10 +63,27 @@
                 const tbody = document.getElementById('tbody');
 
                 function load() {
+                    console.log("load()");
+
                     const doctor = document.getElementById('doctor').value;
                     const specialization = document.getElementById('specialization').value;
                     const date = document.getElementById('date').value;
                     const place = document.getElementById('place').value;
+
+                    fetch("http://localhost:8080/api/v1/doctors")
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error("Błąd sieci: " + response.status);
+                        }
+
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log(data);
+                    })
+                    .catch(error => {
+                        console.error("Wystąpił błąd:", error);
+                    });
                 }
 
                 function createRow(id, doctor, spec, place, room, date, startHour, endHour) {

@@ -19,6 +19,11 @@ public class VisitController {
     private final IVisitService visitService;
     private final VisitMapper visitMapper;
 
+    public VisitController(IVisitService visitService, VisitMapper visitMapper) {
+        this.visitService = visitService;
+        this.visitMapper = visitMapper;
+    }
+
     // Add methods to handle visit-related requests here, e.g., create, get, update visits
 
     @GetMapping("/{id}")
@@ -60,5 +65,4 @@ public class VisitController {
                 visitMapper.toVisitDto(visitService.createVisit(visitDto, username))
         );
     }
-
 }

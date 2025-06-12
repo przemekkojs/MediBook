@@ -13,6 +13,11 @@ public class ClientServiceImpl implements IClientService {
     private final ClientRepository clientRepository;
     private final KeycloakService keycloakService;
 
+    public ClientServiceImpl(ClientRepository clientRepository, KeycloakService keycloakService) {
+        this.clientRepository = clientRepository;
+        this.keycloakService = keycloakService;
+    }
+
     public Client createClient(ClientCreateDTO dto){
 
         Client client = Client.builder()
