@@ -43,17 +43,15 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
-    command:
-      - postgres
-      - -p ${MAIN_DB_PORT}
     networks:
       - mynet
     volumes:
       - main-data:/var/lib/postgresql/data
-#      - ./postgresql/pg_hba.conf:/etc/postgresql/pg_hba.conf
-#      - ./postgresql/postgresql.conf:/etc/postgresql/postgresql.conf
-#      - ./ssl/domain.crt:/var/lib/postgresql/domain.crt:ro
-#      - ./ssl/domain.key:/var/lib/postgresql/domain.key:ro
+      - ./ssl/domain.crt:/ssl/domain.crt
+      - ./ssl/domain.key:/ssl/domain.key
+      - ./ssl/rootCA.crt:/ssl/rootCA.crt
+      - ./ssl/rootCA.key:/var/lib/postgresql/root.key
+      - ./init-postgres.sh:/docker-entrypoint-initdb.d/init-postgres.sh:ro
 
   authorization-db:
     image: postgres:16
@@ -169,7 +167,9 @@ services:
     ports:
       - "8081:8081"
     volumes:
-      - ./ssl:/etc/ssl/private
+      - ./ssl/domain.crt:/etc/ssl/private/pg_client.crt:ro
+      - ./ssl/domain.key:/etc/ssl/private/pg_client.key:ro
+      - ./ssl/rootCA.crt:/etc/ssl/private/root.crt:ro
     depends_on:
       - main-db
       - rabbitmq
