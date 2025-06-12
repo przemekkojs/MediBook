@@ -32,7 +32,7 @@ public class WorkhoursController {
         workhoursService.createWorkHours(dto, username);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{day}")
     @ResponseStatus(code = HttpStatus.CREATED)
     @RolesAllowed({"DOCTOR"})
     public void updateWorkhours(@RequestBody EditWorkhoursDto dto, @PathVariable int day, JwtAuthenticationToken auth) {
