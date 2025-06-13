@@ -21,11 +21,6 @@ public class ProcedureController {
     private final IProcedureService procedureService;
     private final ProcedureMapper procedureMapper;
 
-    public ProcedureController(IProcedureService procedureService, ProcedureMapper procedureMapper) {
-        this.procedureService = procedureService;
-        this.procedureMapper = procedureMapper;
-    }
-
     @GetMapping
     public ResponseEntity<List<ProcedureDto>> getAllProcedures() {
         return ResponseEntity.ok(

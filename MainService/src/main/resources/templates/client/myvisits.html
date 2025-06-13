@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/client/layout-client}">
+      layout:decorate="~{client/layout-client}">
 
     <head>
         <title layout:fragment="title">Moje wizyty</title>
@@ -40,6 +40,21 @@
 
                 function loadVisits() {
                     console.log("loadVisits()");
+
+                    fetch("https://medibook.pl/api/v1/visits/client")
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error("Błąd sieci: " + response.status);
+                        }
+
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log(data);
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
                 }
 
                 function addChild(id, date, from, to, doctor, room, place) {

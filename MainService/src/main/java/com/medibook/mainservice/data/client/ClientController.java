@@ -19,10 +19,6 @@ import java.util.List;
 public class ClientController {
     private final KeycloakService keycloakService;
 
-    public ClientController(KeycloakService keycloakService) {
-        this.keycloakService = keycloakService;
-    }
-
     @GetMapping
     public ResponseEntity<List<ClientDTO>> getClients() {
         return ResponseEntity.ok(keycloakService.getClients());

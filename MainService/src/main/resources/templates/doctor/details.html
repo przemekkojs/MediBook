@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/doctor/layout-doctor}">
+      layout:decorate="~{doctor/layout-doctor}">
 
     <head>
         <title layout:fragment="title">Szczegóły wizyty</title>
@@ -43,6 +43,21 @@
 
                 function load(id) {
                     console.log(`load(id=${id})`);
+
+                    fetch(`https://medibook.pl/api/v1/visits/doctor/${id}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error("Błąd sieci: " + response.status);
+                        }
+
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log(data);
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
                 }
             </script>
         </section>

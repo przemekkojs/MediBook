@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/client/layout-client}">
+      layout:decorate="~{client/layout-client}">
 
     <head>
         <title layout:fragment="title">Zapisz się na wizytę</title>
@@ -70,7 +70,7 @@
                     const date = document.getElementById('date').value;
                     const place = document.getElementById('place').value;
 
-                    fetch("http://localhost:8080/api/v1/doctors")
+                    fetch("http://medibook.pl/api/v1/doctors")
                     .then(response => {
                         if (!response.ok) {
                             throw new Error("Błąd sieci: " + response.status);
@@ -82,7 +82,7 @@
                         console.log(data);
                     })
                     .catch(error => {
-                        console.error("Wystąpił błąd:", error);
+                        console.error(error);
                     });
                 }
 

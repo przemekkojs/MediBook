@@ -19,17 +19,12 @@ public class VisitController {
     private final IVisitService visitService;
     private final VisitMapper visitMapper;
 
-    public VisitController(IVisitService visitService, VisitMapper visitMapper) {
-        this.visitService = visitService;
-        this.visitMapper = visitMapper;
-    }
-
     // Add methods to handle visit-related requests here, e.g., create, get, update visits
 
     @GetMapping("/{id}")
     public ResponseEntity<VisitDto> getVisit(long id) {
         return ResponseEntity.ok(
-                visitMapper.toVisitDto(visitService.getVisit(id))
+            visitMapper.toVisitDto(visitService.getVisit(id))
         );
     }
 
@@ -37,11 +32,10 @@ public class VisitController {
     public ResponseEntity<List<VisitDto>> getAllVisitsFromClient(JwtAuthenticationToken auth) {
         String username = auth.getToken().getClaimAsString(StandardClaimNames.PREFERRED_USERNAME);
 
-
         return ResponseEntity.ok(
-                visitService.getAllVisitsFromClient(username)
-                        .stream().map(visitMapper::toVisitDto)
-                        .toList()
+            visitService.getAllVisitsFromClient(username)
+                .stream().map(visitMapper::toVisitDto)
+                .toList()
         );
     }
 
@@ -49,11 +43,10 @@ public class VisitController {
     public ResponseEntity<List<VisitDto>> getAllVisitsFromDoctor(JwtAuthenticationToken auth) {
         String username = auth.getToken().getClaimAsString(StandardClaimNames.PREFERRED_USERNAME);
 
-
         return ResponseEntity.ok(
-                visitService.getAllVisitsFromDoctor(username)
-                        .stream().map(visitMapper::toVisitDto)
-                        .toList()
+            visitService.getAllVisitsFromDoctor(username)
+                .stream().map(visitMapper::toVisitDto)
+                .toList()
         );
     }
 
@@ -62,7 +55,7 @@ public class VisitController {
         String username = auth.getToken().getClaimAsString(StandardClaimNames.PREFERRED_USERNAME);
 
         return ResponseEntity.ok(
-                visitMapper.toVisitDto(visitService.createVisit(visitDto, username))
+            visitMapper.toVisitDto(visitService.createVisit(visitDto, username))
         );
     }
 }

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/doctor/layout-doctor}">
+      layout:decorate="~{doctor/layout-doctor}">
 
     <head>
         <title layout:fragment="title">Godziny pracy</title>
@@ -78,6 +78,21 @@
                 function loadWorkhours() {
                     // Tutaj się jakoś ID będzie musiało brać wgl
                     console.log("loadWorkhours()");
+
+                    fetch(`https://medibook.pl/api/v1/workhours/${id}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error("Błąd sieci: " + response.status);
+                        }
+
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log(data);
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
                 }
 
                 function addChild(id, weekday, from, to, room) {

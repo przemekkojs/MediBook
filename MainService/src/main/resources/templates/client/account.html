@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/client/layout-client}">
+      layout:decorate="~{client/layout-client}">
 
     <head>
         <title layout:fragment="title">Moje konto</title>
@@ -57,15 +57,14 @@
                     </div>
                 </div>
             </div>
-
             
             <script>
-                const name = document.getElementById('name').value;
-                const surname = document.getElementById('surname').value;
-                const birthdate = document.getElementById('age').value;
-                const pesel = document.getElementById('pesel').value;
-                const email = document.getElementById('email').value;
-                const phone = document.getElementById('phone').value;
+                const name = document.getElementById('name');
+                const surname = document.getElementById('surname');
+                const birthdate = document.getElementById('age');
+                const pesel = document.getElementById('pesel');
+                const email = document.getElementById('email');
+                const phone = document.getElementById('phone');
 
                 function saveChanges() {
 
@@ -73,6 +72,23 @@
 
                 function load() {
                     console.log("load()");
+
+                    // Trzeba jakoś załadować ID...
+
+                    fetch(`https://medibook.pl/api/v1/clients/${id}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error("Błąd sieci: " + response.status);
+                        }
+
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log(data);
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
                 }
 
                 load();

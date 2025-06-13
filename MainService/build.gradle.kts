@@ -39,6 +39,7 @@ dependencies {
 //  BEGIN_PK:
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.cloud:spring-cloud-starter-bootstrap")
+    implementation("nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.2.0")
 //  END_PK:
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.8")
 
