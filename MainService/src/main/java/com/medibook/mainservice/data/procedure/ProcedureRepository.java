@@ -8,5 +8,7 @@ import java.util.List;
 @Repository
 public interface ProcedureRepository extends JpaRepository<Procedure, Long> {
 
+
     List<Procedure> getProceduresByDoctorUsername(String username);
+    List<Procedure> getProceduresByDoctorId(String id);
 }

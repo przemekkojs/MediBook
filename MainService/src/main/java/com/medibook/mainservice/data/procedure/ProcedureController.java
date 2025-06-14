@@ -4,7 +4,6 @@ import com.medibook.mainservice.data.procedure.dto.CreateProcedureDto;
 import com.medibook.mainservice.data.procedure.dto.EditProcedureDto;
 import com.medibook.mainservice.data.procedure.dto.ProcedureDto;
 import com.medibook.mainservice.data.procedure.dto.ProcedureMapper;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.core.oidc.StandardClaimNames;
@@ -46,15 +45,19 @@ public class ProcedureController {
         String username = auth.getToken().getClaimAsString(StandardClaimNames.PREFERRED_USERNAME);
 
         return ResponseEntity.ok(
-                procedureService.getProceduresFromDoctor(username)
+                procedureService.getProceduresFromDoctorByUsername(username)
                         .stream().map(procedureMapper::toProcedureDto)
                         .toList()
         );
     }
 
-    @GetMapping("/doctor/{id}")
+    @GetMapping("/doctors/{id}")
     public ResponseEntity<List<ProcedureDto>> getDoctorProcedures(@PathVariable("id") String id) {
-        return ResponseEntity.ok(List.of());
+        return ResponseEntity.ok(
+                procedureService.getProceduresFromDoctorById(id)
+                        .stream().map(procedureMapper::toProcedureDto)
+                        .toList()
+        );
     }
 
     @PostMapping("/doctor")
