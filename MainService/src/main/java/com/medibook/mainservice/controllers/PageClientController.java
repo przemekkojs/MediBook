@@ -32,4 +32,9 @@ public class PageClientController {
     public String clientAccount() {
         return "client/account";
     }
+
+    @GetMapping("/redirect")
+    public String clientRedirect() {
+        return "client/redirect";
+    }
 }

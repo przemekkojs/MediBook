@@ -22,7 +22,6 @@ public class WorkhoursController {
     private final IWorkhoursService workhoursService;
     private final WorkhourMapper workhourMapper;
 
-
     @PostMapping("/doctor")
     @ResponseStatus(code = HttpStatus.CREATED)
     @RolesAllowed({"DOCTOR"})
@@ -41,7 +40,6 @@ public class WorkhoursController {
         workhoursService.updateWorkHours(dto,day,username);
     }
 
-
     @DeleteMapping("/doctor/{id}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     @RolesAllowed({"DOCTOR"})
@@ -56,7 +54,4 @@ public class WorkhoursController {
                 .map(workhour -> workhourMapper.toDto(workhour))
                 .toList();
     }
-
-
-
 }
