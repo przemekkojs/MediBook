@@ -19,8 +19,6 @@ public class VisitController {
     private final IVisitService visitService;
     private final VisitMapper visitMapper;
 
-    // Add methods to handle visit-related requests here, e.g., create, get, update visits
-
     @GetMapping("/{id}")
     public ResponseEntity<VisitDto> getVisit(long id) {
         return ResponseEntity.ok(

@@ -23,7 +23,7 @@ public class WorkhoursController {
     private final WorkhourMapper workhourMapper;
 
 
-    @PostMapping
+    @PostMapping("/doctor")
     @ResponseStatus(code = HttpStatus.CREATED)
     @RolesAllowed({"DOCTOR"})
     public void createWorkhours(@RequestBody CreateWorkhoursDto dto, JwtAuthenticationToken auth) {
@@ -32,7 +32,7 @@ public class WorkhoursController {
         workhoursService.createWorkHours(dto, username);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/doctor/{day}")
     @ResponseStatus(code = HttpStatus.CREATED)
     @RolesAllowed({"DOCTOR"})
     public void updateWorkhours(@RequestBody EditWorkhoursDto dto, @PathVariable int day, JwtAuthenticationToken auth) {
@@ -42,7 +42,7 @@ public class WorkhoursController {
     }
 
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/doctor/{id}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     @RolesAllowed({"DOCTOR"})
     public void deleteWorkhours(@PathVariable long id) {

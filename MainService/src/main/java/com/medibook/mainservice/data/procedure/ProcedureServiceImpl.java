@@ -37,8 +37,13 @@ public class ProcedureServiceImpl implements IProcedureService {
     }
 
     @Override
-    public List<Procedure> getProceduresFromDoctor(String username) {
+    public List<Procedure> getProceduresFromDoctorByUsername(String username) {
         return procedureRepository.getProceduresByDoctorUsername(username);
+    }
+
+    @Override
+    public List<Procedure> getProceduresFromDoctorById(String id) {
+        return procedureRepository.getProceduresByDoctorId(id);
     }
 
     @Override

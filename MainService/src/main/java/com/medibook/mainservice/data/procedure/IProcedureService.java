@@ -11,7 +11,8 @@ public interface IProcedureService {
 
     List<Procedure> getProcedures();
 
-    List<Procedure> getProceduresFromDoctor(String username);
+    List<Procedure> getProceduresFromDoctorByUsername(String username);
+    List<Procedure> getProceduresFromDoctorById(String id);
 
     Procedure createProcedure(CreateProcedureDto procedureDto,String username);
 
