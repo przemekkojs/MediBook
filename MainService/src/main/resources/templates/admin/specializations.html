@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout-admin}">
+
+    <head>
+        <title layout:fragment="title">Specjalizacje</title>
+    </head>
+
+    <body>
+        <section layout:fragment="content">
+            <div class="container my-5">
+            <h2 class="mb-4">Zarządzanie specjalizacjami</h2>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Specjalizacja</th>
+                            <th class="text-center">Akcja</th>
+                        </tr>
+                    </thead>
+                    
+                    <tbody>
+                        <!-- JS -->
+                        <!-- <tr>
+                            <td>Kardiolog</td>
+                            <td class="text-center">
+                                <button class="btn btn-outline-danger btn-sm">Usuń</button>
+                            </td>
+                        </tr> -->
+                    </tbody>
+                </table>
+            </div>
+
+            <hr class="my-5">
+
+            <form class="row g-3">
+                <div class="col-md-6">
+                    <label for="spec-name" class="form-label">Nowa specjalizacja</label>
+                    <input type="text" class="form-control" id="spec-name" placeholder="Wpisz..." required>
+                </div>
+
+                <div class="col-md-3 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">Dodaj</button>
+                </div>
+            </form>
+        </div>
+
+        </section>
+    </body>
+</html>

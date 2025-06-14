@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>MediBook - Strona główna</title>
+        <link href="/style/bootstrap.min.css" rel="stylesheet">
+        <link href="/style/style.css" rel="stylesheet">
+        <style>
+            body {
+                background-image: url('/images/background.png');
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+                min-height: 100vh;
+            }
+
+            .overlay {
+                background-color: rgba(255, 255, 255, 0.9);
+                padding: 2rem;
+                border-radius: 1rem;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            }
+        </style>
+    </head>
+
+    <body class="d-flex align-items-center justify-content-center">
+        <div class="container text-center">
+            <div class="overlay mx-auto" style="max-width: 400px;">
+                <img src="/images/logo.png" alt="Logo MediBook" width="60" height="60" class="mb-3">
+                <h1 class="mb-2">MediBook</h1>
+                <p class="mb-4 text-muted">Wizyta lekarska nigdy nie była łatwiejsza!</p>
+
+                <div class="d-grid gap-3">
+                    <button class="btn btn-primary" onclick="loginDoctor()">Zaloguj jako doktor</button>
+                    <button class="btn btn-secondary" onclick="loginClient()">Zaloguj jako klient</button>
+                </div>
+            </div>
+        </div>
+    </body>
+
+    <script src="/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        function loginDoctor() {
+            const url = `https://medibook.pl/oauth/realms/doctor/protocol/open-id-connect/auth?response_type=code&client_id=development-oauth-client&redirect_uri=https://medibook.pl/doctor`;
+            window.location.href = url;
+        }
+
+        function loginClient() {
+            const url = `https://medibook.pl/oauth/realms/client/protocol/open-id-connect/auth?response_type=code&client_id=development-oauth-client&redirect_uri=https://medibook.pl/client`;
+            window.location.href = url;
+        }
+    </script>
+</html>

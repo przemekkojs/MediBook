@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout-admin}">
+
+    <head>
+        <title layout:fragment="title">Szczegóły użytkownika</title>
+    </head>
+
+    <body>
+        <section layout:fragment="content">
+            <h1>Szczegóły użytkownika</h1>
+
+            <div>
+                Imię: <span id="name"></span>
+                Nazwisko: <span id="surname"></span>
+                Wiek: <span id="age"></span>
+                Rola: <span id="role"></span> <!-- Admin, Doktor, Klient -->
+            </div>
+
+            <div>
+                <input type="button" value="Usuń konto" class="btn btn-primary mt-4">
+            </div>
+        </section>
+    </body>
+</html>

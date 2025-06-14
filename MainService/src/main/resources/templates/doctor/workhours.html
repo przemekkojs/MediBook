@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{doctor/layout-doctor}">
+
+    <head>
+        <title layout:fragment="title">Godziny pracy</title>
+    </head>
+
+    <body>
+        <section layout:fragment="content">
+            <div class="container my-4">
+                <h3 class="mb-3">Moje godziny pracy</h3>
+
+                <div class="container my-4">
+                    <div id="working-hours-list">
+                        <table class="table table-bordered table-striped align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th scope="col">Dzień tygodnia</th>
+                                    <th scope="col">Od</th>
+                                    <th scope="col">Do</th>
+                                    <th scope="col">Sala</th>
+                                    <th scope="col">Akcja</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="tbody">
+                                <!-- JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <hr class="my-4">
+
+                <h3 class="mb-3">Dodaj godziny pracy</h3>
+
+                <form id="working-hours-form" class="d-flex flex-wrap align-items-end gap-3">
+                    <div>
+                        <label for="day-select" class="form-label">Dzień tygodnia</label>
+                        <select id="day-select" class="form-select" required>
+                            <option value="Poniedziałek" selected>Poniedziałek</option>
+                            <option value="Wtorek">Wtorek</option>
+                            <option value="Środa">Środa</option>
+                            <option value="Czwartek">Czwartek</option>
+                            <option value="Piątek">Piątek</option>
+                            <option value="Sobota">Sobota</option>
+                            <option value="Niedziela">Niedziela</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="start-hour-select" class="form-label">Od</label>
+                        <input type="time" id="start-hour-select" name="start-hour-select" class="form-control" required>
+                    </div>
+
+                    <div>
+                        <label for="end-hour-select" class="form-label">Do</label>
+                        <input type="time" id="end-hour-select" name="end-hour-select" class="form-control" required>
+                    </div>
+
+                    <div>
+                        <label for="room-input" class="form-label">Sala</label>
+                        <input type="text" id="room-input" name="room-input" class="form-control" placeholder="Wpisz..." required>
+                    </div>
+
+                    <div>
+                        <button type="button" class="btn btn-primary mt-4" onclick="addWorkhour(event)">Dodaj</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Godziny pracy -->
+            <script>
+                const tbody = document.getElementById('tbody');
+
+                function loadWorkhours() {
+                    // Tutaj się jakoś ID będzie musiało brać wgl
+                    console.log("loadWorkhours()");
+
+                    fetch(`https://medibook.pl/api/v1/workhours/${id}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error("Błąd sieci: " + response.status);
+                        }
+
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log(data);
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+                }
+
+                function addChild(id, weekday, from, to, room) {
+                    const toAdd = document.createElement('tr');
+
+                    toAdd.innerHTML = `
+                        <td>${weekday}</td>
+                        <td>${from}</td>
+                        <td>${to}</td>
+                        <td>${room}</td>
+
+                        <td>
+                            <button class="btn btn-outline-danger btn-sm" onclick="deleteWorkhour('${id}')">Usuń</button>
+                        </td>
+                    `;
+
+                    tbody.appendChild(toAdd);
+                }
+
+                function deleteWorkhour(id) {
+
+                }
+            </script>
+
+            <!-- Dodawanie -->
+            <script>
+                function addWorkhour(event) {
+                    event.preventDefault();
+
+                    const weekday = document.getElementById('day-select').value;
+                    const from = document.getElementById('start-hour-select').value;
+                    const to = document.getElementById('end-hour-select').value;
+                    const room = document.getElementById('room-input').value;
+                }
+            </script>
+        </section>
+    </body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{doctor/layout-doctor}">
+
+    <head>
+        <title layout:fragment="title">Szczegóły wizyty</title>
+    </head>
+
+    <body>
+        <section layout:fragment="content">
+            <h1 class="mb-4">Szczegóły wizyty</h1>
+
+            <div class="card p-3 shadow-sm">
+                <div class="row mb-2">
+                    <div class="col-sm-3 fw-bold">Pacjent:</div>
+                    <div class="col-sm-9" id="patient"></div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-3 fw-bold">Od:</div>
+                    <div class="col-sm-9" id="begin"></div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-3 fw-bold">Do:</div>
+                    <div class="col-sm-9" id="end"></div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-3 fw-bold">Data:</div>
+                    <div class="col-sm-9" id="date"></div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3 fw-bold">Sala:</div>
+                    <div class="col-sm-9" id="room"></div>
+                </div>
+            </div>
+
+            <script>
+                const patient = document.getElementById('patient');
+                const begin = document.getElementById('begin');
+                const end = document.getElementById('end');
+                const date = document.getElementById('date');
+                const room = document.getElementById('room');
+
+                function load(id) {
+                    console.log(`load(id=${id})`);
+
+                    fetch(`https://medibook.pl/api/v1/visits/doctor/${id}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error("Błąd sieci: " + response.status);
+                        }
+
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log(data);
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+                }
+            </script>
+        </section>
+    </body>
+</html>

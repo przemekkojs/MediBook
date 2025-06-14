@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout-admin}">
+
+    <head>
+        <title layout:fragment="title">Miejsca</title>
+    </head>
+
+    <body>
+        <section layout:fragment="content">
+            <h2>Zarządzanie miejscami</h2>
+
+            <div>
+                <!-- Tutaj tabela z dostępnymi adresami -->
+                <!-- Po przycisku usuwania trzeba zrobić usuwanie kaskadowe -->
+            </div>
+
+            <hr class="my-4">
+
+            <div>
+                <form>
+                    <label for="spec-name">Adres</label>
+                    <input type="text" placeholder="Wpisz..." id="spec-name">
+                    <input type="submit" value="Dodaj" class="btn btn-primary mt-4">
+                </form>
+            </div>
+        </section>
+    </body>
+</html>

@@ -34,7 +34,15 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.cloud:spring-cloud-stream-binder-rabbit")
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
+    implementation("org.keycloak:keycloak-admin-client:24.0.3")
+    implementation("org.keycloak:keycloak-core:24.0.3")
+//  BEGIN_PK:
+    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+    implementation("org.springframework.cloud:spring-cloud-starter-bootstrap")
+    implementation("nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.2.0")
+//  END_PK:
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.8")
+
     compileOnly("org.projectlombok:lombok")
     runtimeOnly("org.postgresql:postgresql")
     annotationProcessor("org.projectlombok:lombok")

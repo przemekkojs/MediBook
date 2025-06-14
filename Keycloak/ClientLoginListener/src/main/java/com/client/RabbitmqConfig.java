@@ -32,11 +32,12 @@ public class RabbitmqConfig {
 
     public static String calculateRoutingKey(Event event, KeycloakSession session) {
         //KK.EVENT.CLIENT.<REALM>.<RESULT>.<CLIENT>.<EVENT_TYPE>
+        String name = removeDots(session.realms().getRealm(event.getRealmId()).getName());
+        System.out.println(name);
         String routingKey = ROUTING_KEY_PREFIX
-                + "." + removeDots(session.realms().getRealm(event.getRealmId()).getName())
                 + "." + (event.getError() != null ? "ERROR" : "SUCCESS")
-                + "." + removeDots(event.getClientId())
-                + "." + event.getType();
+                + "." + event.getType()
+                + "." + name;
 
         log.info(routingKey);
 
