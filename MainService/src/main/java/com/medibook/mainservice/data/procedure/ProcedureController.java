@@ -81,7 +81,7 @@ public class ProcedureController {
     }
 
     @DeleteMapping("/doctor/{id}")
-    public void deleteProcedure(long id) {
+    public void deleteProcedure(@PathVariable long id) {
         procedureService.deleteProcedure(id);
     }
 }
