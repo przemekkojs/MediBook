@@ -27,7 +27,6 @@ public class WorkhoursController {
     @RolesAllowed({"DOCTOR"})
     public void createWorkhours(@RequestBody CreateWorkhoursDto dto, JwtAuthenticationToken auth) {
         String username = auth.getToken().getClaimAsString(StandardClaimNames.PREFERRED_USERNAME);
-        System.out.println(auth); // Chyba trzeba wywalić
         workhoursService.createWorkHours(dto, username);
     }
 
@@ -36,7 +35,6 @@ public class WorkhoursController {
     @RolesAllowed({"DOCTOR"})
     public void updateWorkhours(@RequestBody EditWorkhoursDto dto, @PathVariable int day, JwtAuthenticationToken auth) {
         String username = auth.getToken().getClaimAsString(StandardClaimNames.PREFERRED_USERNAME);
-        System.out.println(username); // Chyba trzeba wywalić
         workhoursService.updateWorkHours(dto,day,username);
     }
 

@@ -2,14 +2,27 @@ package com.medibook.mainservice.data.visit;
 
 import com.medibook.mainservice.data.client.Client;
 import com.medibook.mainservice.data.client.IClientService;
+import com.medibook.mainservice.data.client.dto.ClientDTO;
 import com.medibook.mainservice.data.doctor.Doctor;
 import com.medibook.mainservice.data.doctor.IDoctorService;
 import com.medibook.mainservice.data.procedure.IProcedureService;
 import com.medibook.mainservice.data.procedure.Procedure;
 import com.medibook.mainservice.data.visit.dto.CreateVisitDto;
+import com.medibook.mainservice.data.visit.dto.TimeSchedule;
+import com.medibook.mainservice.data.visit.dto.TimeScheduleEntry;
+import com.medibook.mainservice.data.workhours.IWorkhoursService;
+import com.medibook.mainservice.data.workhours.Workhours;
+import com.medibook.mainservice.tools.keycloak.KeycloakService;
+import com.medibook.mainservice.tools.rabbitmq.RabbitMQService;
+import com.medibook.mainservice.tools.rabbitmq.dto.ClientVisitConfirmation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
+import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -20,6 +33,9 @@ public class VisitServiceImpl implements IVisitService {
     private final IClientService clientService;
     private final IDoctorService doctorService;
     private final IProcedureService procedureService;
+    private final RabbitMQService rabbitMQService;
+    private final KeycloakService keycloakService;
+    private final IWorkhoursService workhoursService;
 
 
     @Override
@@ -62,13 +78,59 @@ public class VisitServiceImpl implements IVisitService {
                 .client(client)
                 .startTime(visitDto.startTime())
                 .procedure(procedure)
+                .date(visitDto.date())
                 .doctor(doctor)
                 .totalPrice(procedure.getPrice())
                 .build();
 
         visit = visitRepository.save(visit);
 
+        ClientDTO clientDTO = keycloakService.getClientByUsername(client.getUsername());
+
+        ClientVisitConfirmation confirmation =
+                ClientVisitConfirmation.builder()
+                        .doctorName(doctor.getUsername())
+                        .clientName(clientDTO.name() + " " + clientDTO.lastName())
+                        .clientEmail(clientDTO.email())
+                        .visitTime(visit.getStartTime().toString())
+                        .visitDate(visit.getDate().toString())
+                        .build();
+
+        rabbitMQService.sendClientVisitNotificationMessage(confirmation);
+
         return visit;
+    }
+
+    public TimeSchedule getTimeSchedule(String id, LocalDate date) {
+        List<Visit> visits = visitRepository.findAllByDoctorIdAndDate(id, date);
+        Integer dayOfWeek = date.getDayOfWeek().getValue();
+
+        Workhours workhours = workhoursService.getWorkHoursForDoctor(id)
+                .stream()
+                .filter(wh -> wh.getDay() == dayOfWeek)
+                .findFirst()
+                .orElse(null);
+
+        if (workhours == null) {
+            return new TimeSchedule(List.of());
+        }
+        List<TimeScheduleEntry> scheduleEntries = new ArrayList<>();
+
+        LocalTime startTime = workhours.getStartTime();
+
+        for (Visit visit : visits) {
+            LocalTime endTime = visit.getStartTime().plusSeconds(visit.getProcedure().getLength().toSecondOfDay());
+            if (visit.getStartTime().isAfter(startTime)) {
+                scheduleEntries.add(new TimeScheduleEntry(startTime,visit.getStartTime()));
+            }
+            startTime = endTime;
+        }
+
+        if(startTime.isBefore(workhours.getEndTime())) {
+            scheduleEntries.add(new TimeScheduleEntry(startTime, workhours.getEndTime()));
+        }
+
+        return new TimeSchedule(scheduleEntries);
     }
 
     @Override

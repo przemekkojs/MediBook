@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Min;
 import lombok.*;
 
 import java.sql.Time;
+import java.time.LocalTime;
 
 @Entity
 @AllArgsConstructor
@@ -26,9 +27,9 @@ public class Workhours {
     @Min(1)
     private int day;
     @Column(nullable = false)
-    private Time startTime;
+    private LocalTime startTime;
     @Column(nullable = false)
-    private Time endTime;
+    private LocalTime endTime;
     @ManyToOne
     private Doctor doctor;
 }
