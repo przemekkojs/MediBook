@@ -21,3 +21,4 @@ DNS.1   = localhost
 DNS.2   = elb
 DNS.3   = keycloak_web
 DNS.4   = main-service
+DNS.5   = rabbitmq

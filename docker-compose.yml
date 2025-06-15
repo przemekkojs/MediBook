@@ -34,6 +34,8 @@ services:
       POSTGRES_USER: ${MAIN_DB_USERNAME}
       POSTGRES_PASSWORD: ${MAIN_DB_PASSWORD}
       POSTGRES_DB: ${MAIN_DB_NAME}
+      DB_PORT: ${MAIN_DB_PORT}
+    entrypoint: /docker-entrypoint-initdb.d/init-postgres.sh
     expose:
       - "${MAIN_DB_PORT}"
     ports:
@@ -50,7 +52,6 @@ services:
       - ./ssl/domain.crt:/ssl/domain.crt
       - ./ssl/domain.key:/ssl/domain.key
       - ./ssl/rootCA.crt:/ssl/rootCA.crt
-      - ./ssl/rootCA.key:/var/lib/postgresql/root.key
       - ./init-postgres.sh:/docker-entrypoint-initdb.d/init-postgres.sh:ro
 
   authorization-db:
@@ -59,6 +60,9 @@ services:
       POSTGRES_USER: ${AUTHORIZATION_DB_USERNAME}
       POSTGRES_PASSWORD: ${AUTHORIZATION_DB_PASSWORD}
       POSTGRES_DB: ${AUTHORIZATION_DB_NAME}
+      PGPORT: ${AUTHORIZATION_DB_PORT}
+    entrypoint: ["/docker-entrypoint-initdb.d/init-postgres.sh"]
+
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -d postgres" ]
       interval: 30s
@@ -68,11 +72,14 @@ services:
       - "${AUTHORIZATION_DB_PORT}"
     ports:
       - "${AUTHORIZATION_DB_PORT}:${AUTHORIZATION_DB_PORT}"
-    command: -p ${AUTHORIZATION_DB_PORT}
     networks:
       - mynet
     volumes:
       - auth-db-data:/var/lib/postgresql/data
+      - ./ssl/domain.crt:/ssl/domain.crt
+      - ./ssl/domain.key:/ssl/domain.key
+      - ./ssl/rootCA.crt:/ssl/rootCA.crt
+      - ./init-postgres.sh:/docker-entrypoint-initdb.d/init-postgres.sh:ro
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -85,14 +92,18 @@ services:
 
     ports:
       - "5671:5671"
-      - "5672:5672"
       - "15671:15671"
       - "15672:15672"
     networks:
       - mynet
 
   notification-service:
-    build: ./NotificationService
+    build:
+      context: ./NotificationService
+      dockerfile: Dockerfile
+      args:
+        TRUSTSTORE_PASSWORD: ${TRUSTSTORE_PASSWORD}
+        KEYSTORE_PASSWORD: ${KEYSTORE_PASSWORD}
     environment:
       RABBIT_MQ_HOST: rabbitmq
       RABBIT_MQ_PORT: ${RABBIT_MQ_PORT}
@@ -100,16 +111,23 @@ services:
       RABBIT_MQ_PASSWORD: ${RABBIT_MQ_PASSWORD}
       MAIL_USERNAME: ${MAIL_USERNAME}
       MAIL_PASSWORD: ${MAIL_PASSWORD}
+      KEYSTORE_PASSWORD: ${KEYSTORE_PASSWORD}
+      TRUSTSTORE_PASSWORD: ${KEYSTORE_PASSWORD}
     depends_on:
       - rabbitmq
     networks:
       - mynet
 
   keycloak-web:
-    build: ./Keycloak
+    build:
+      context: ./Keycloak
+      dockerfile: Dockerfile
+      args:
+        TRUSTSTORE_PASSWORD: ${TRUSTSTORE_PASSWORD}
+        KEYSTORE_PASSWORD: ${KEYSTORE_PASSWORD}
     environment:
       KC_DB: postgres
-      KC_DB_URL: jdbc:postgresql://authorization-db:${AUTHORIZATION_DB_PORT}/${AUTHORIZATION_DB_NAME}
+      KC_DB_URL: jdbc:postgresql://authorization-db:${AUTHORIZATION_DB_PORT}/${AUTHORIZATION_DB_NAME}?ssl=true&sslmode=verify-ca&sslrootcert=/etc/ssl/private/pg_client.crt
       KC_DB_USERNAME: ${AUTHORIZATION_DB_USERNAME}
       KC_DB_PASSWORD: ${AUTHORIZATION_DB_PASSWORD}
 
@@ -137,12 +155,20 @@ services:
       KK_TO_RMQ_USERNAME: ${RABBIT_MQ_USERNAME}
       KK_TO_RMQ_PASSWORD: ${RABBIT_MQ_PASSWORD}
       KK_TO_RMQ_EXCHANGE: keycloak-notification
+      KK_TO_RMQ_USE_TLS: true
+      KK_TO_RMQ_KEY_STORE: /opt/keycloak/client-keystore.p12
+      KK_TO_RMQ_KEY_STORE_PASS: ${KEYSTORE_PASSWORD}
+      KK_TO_RMQ_TRUST_STORE: /opt/keycloak/client-truststore.p12
+      KK_TO_RMQ_TRUST_STORE_PASS: ${KEYSTORE_PASSWORD}
 
     command: start-dev --verbose -Dkeycloak.profile.feature.upload_scripts=enabled  --http-port=8083 --https-port=8084 --http-relative-path=\oauth --https-certificate-file=/etc/ssl/private/domain.crt --https-certificate-key-file=/etc/ssl/private/domain.key --hostname-strict-backchannel=true
     depends_on:
       - authorization-db
     volumes:
       - ./ssl:/etc/ssl/private
+      - ./ssl/domain.crt:/etc/ssl/private/pg_client.crt:ro
+      - ./ssl/domain.key:/etc/ssl/private/pg_client.key:ro
+      - ./ssl/rootCA.crt:/etc/ssl/private/root.crt:ro
     ports:
       - "8083:8083"
       - "8084:8084"
@@ -150,7 +176,12 @@ services:
       - mynet
 
   main-service:
-    build: ./MainService
+    build:
+      context: ./MainService
+      dockerfile: Dockerfile
+      args:
+        TRUSTSTORE_PASSWORD: ${TRUSTSTORE_PASSWORD}
+        KEYSTORE_PASSWORD: ${KEYSTORE_PASSWORD}
     environment:
       RABBIT_MQ_HOST: rabbitmq
       RABBIT_MQ_PORT: ${RABBIT_MQ_PORT}
@@ -170,6 +201,8 @@ services:
       ADMIN_ISSUER: https://medibook.pl
       ADMIN_USERNAME: ${KEYCLOAK_USERNAME}
       ADMIN_PASSWORD: ${KEYCLOAK_PASSWORD}
+      KEYSTORE_PASSWORD: ${KEYSTORE_PASSWORD}
+      TRUSTSTORE_PASSWORD: ${KEYSTORE_PASSWORD}
     ports:
       - "8081:8081"
     volumes:

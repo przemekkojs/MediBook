@@ -46,7 +46,7 @@ public class RabbitMQConsumer {
                             name = "keycloak-notification",
                             autoDelete = "true",
                             ignoreDeclarationExceptions = "true"),
-                    key = "KK.EVENT.SUCCESS.REGISTER.client")
+                    key = "KK.EVENT.SUCCESS.REGISTER.doctor")
     )
     public void listenDoctor(String message) throws JsonProcessingException {
         System.out.println(message);
