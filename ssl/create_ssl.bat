@@ -35,6 +35,11 @@ REM Concatenate certificates into fullchain.crt
   type %CA_CERT%
 ) > fullchain.crt
 
+(
+  type %CA_KEY%
+  type %CA_CERT%
+) > combined.crt
+
 if not exist ..\MainService\crt mkdir ..\MainService\crt
 
 copy %CA_CERT% ..\MainService\crt\%CA_CERT%

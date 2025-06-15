@@ -32,6 +32,7 @@ openssl x509 -req -in ${SERVER_CSR} \
   -extfile ${CONFIG_FILE} -extensions req_ext
 
 cat ${SERVER_CERT} ${CA_CERT} > fullchain.crt
+cat ${CA_KEY} ${CA_CERT} > ca_combined.crt
 
 cp ${CA_CERT} ../MainService/crt/${CA_CERT}
 cp ${SERVER_CERT} ../MainService/crt/${SERVER_CERT}
