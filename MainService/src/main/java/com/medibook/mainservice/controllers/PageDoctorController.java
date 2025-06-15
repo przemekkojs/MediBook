@@ -44,4 +44,9 @@ public class PageDoctorController {
     public String doctorRedirect() {
         return "doctor/redirect";
     }
+
+    @GetMapping("/procedures")
+    public String doctorProcedures() {
+        return "doctor/procedures";
+    }
 }
