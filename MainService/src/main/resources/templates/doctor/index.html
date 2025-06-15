@@ -10,7 +10,7 @@
     <body>
         <section layout:fragment="content">
             <div class="container mt-4">
-                <h2 class="mb-4">Witaj, Jan Kowalski</h2>
+                <h2 class="mb-4" id="header"></h2>
 
                 <div class="row mb-5 align-items-stretch">
                     <div class="col-md-4">
@@ -31,8 +31,9 @@
                                     <span id="patient" class="fw-semibold">Piotr Nowak</span>,
                                     <span id="start-hour" class="text-muted">10:00</span> -
                                     <span id="end-hour" class="text-muted">10:30</span>
-                                    <input type="hidden" value="" id="id">
+                                    <input type="hidden" id="id">
                                 </p>
+
                                 <button class="btn btn-outline-primary btn-sm" onclick="visitDetails()">Szczegóły</button>
                             </div>
                         </div>
@@ -58,16 +59,27 @@
                     </div>
                 </div>
             </div>
+
+            <script src="/js/userId.js"></script>
+            <script src="/js/date.js"></script>
             
             <script>
                 const tbody = document.getElementById('tbody');
                 const nextVisit = document.getElementById('next-visit');
-                const id = document.getElementById('id');
+                const id = document.getElementById('id'); //ID WIZYTY
+                const patient = document.getElementById('patient');
+                const startHour = document.getElementById('start-hour');
+                const endHour = document.getElementById('end-hour');
+                const header = document.getElementById('header');
+
+                function loadHeader() {
+                    console.log("loadHeader()");
+                }
 
                 function loadDay() {
                     console.log("loadDay()");
 
-                    fetch(`https://medibook.pl/api/v1/visits/doctor/${id}`)
+                    fetch(`https://medibook.pl/api/v1/visits/doctor/${userId}`)
                     .then(response => {
                         if (!response.ok) {
                             throw new Error("Błąd sieci: " + response.status);
@@ -96,16 +108,12 @@
                 }
 
                 function loadNextVisit() {
-                    const patient = document.getElementById('patient');
-                    const startHour = document.getElementById('start-hour');
-                    const endHour = document.getElementById('end-hour');
-                    
                     patient.innerText = "";
                     startHour.innerText = "";
                     endHour.innerText = "";
                     id.value = "";
 
-                    fetch(`https://medibook.pl/api/v1/visits/doctor/${id}`)
+                    fetch(`https://medibook.pl/api/v1/visits/doctor/${id.value}`)
                     .then(response => {
                         if (!response.ok) {
                             throw new Error("Błąd sieci: " + response.status);
@@ -126,9 +134,9 @@
                 }
 
                 loadDay();
-            </script>
-
-            <script src="/js/date.js"></script>
+                loadHeader();
+                loadNextVisit();
+            </script>            
         </section>
     </body>
 </html>

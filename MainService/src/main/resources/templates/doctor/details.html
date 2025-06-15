@@ -41,8 +41,16 @@
                 const date = document.getElementById('date');
                 const room = document.getElementById('room');
 
-                function load(id) {
-                    console.log(`load(id=${id})`);
+                function loadAll() {
+                    console.log("loadAll()");
+                    
+                    const visitId = "";
+
+                    loadDetails(id);
+                }
+
+                function loadDetails(id) {
+                    console.log(`loadDetails(id=${id})`);
 
                     fetch(`https://medibook.pl/api/v1/visits/doctor/${id}`)
                     .then(response => {

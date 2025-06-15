@@ -46,7 +46,15 @@
                 const room = document.getElementById('room');
                 const place = document.getElementById('place');
 
-                function load(id) {
+                function loadAll() {
+                    console.log("loadAll()");
+
+                    const visitId = "";
+
+                    loadDetails(id);
+                }
+
+                function loadDetails(id) {
                     fetch(`https://medibook.pl/api/v1/visits/${id}`)
                     .then(response => {
                         if (!response.ok) {

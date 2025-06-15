@@ -50,8 +50,8 @@ public class WorkhoursController {
     @GetMapping("/{doctorId}")
     public List<WorkhoursDto> getWorkhoursFromDoctor(@PathVariable String doctorId) {
         return workhoursService.getWorkHoursForDoctor(doctorId)
-                .stream()
-                .map(workhour -> workhourMapper.toDto(workhour))
-                .toList();
+            .stream()
+            .map(workhour -> workhourMapper.toDto(workhour))
+            .toList();
     }
 }
