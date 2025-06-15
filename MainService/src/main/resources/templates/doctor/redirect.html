@@ -1,0 +1,55 @@
+<html>
+    <head>
+        <title>Przekierowanie...</title>
+    </head>
+
+    <body>
+        <script>
+            window.addEventListener("DOMContentLoaded", function () {
+                const currentUrl = new URLSearchParams(document.location.search);
+                const code = currentUrl.get("code");
+
+                if (!code) {
+                    console.error("Brak kodu autoryzacyjnego w URL.");
+                    //window.location.href = "https://medibook.pl/error";
+                    return;
+                }
+
+                const data = new URLSearchParams();
+                data.append("grant_type", "authorization_code");
+                data.append("client_id", "development-oauth-client");
+                data.append("code", code);
+                data.append("redirect_uri", "https://medibook.pl/doctor/redirect");
+
+                const tokenUrl = "https://medibook.pl/oauth/realms/doctor/protocol/openid-connect/token";
+
+                fetch(tokenUrl, {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: data
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(response.status);
+                    }
+
+                    return response.json();
+                })
+                .then(data => {
+                    const seconds = 30;
+
+                    const expiresInSeconds = data.expires_in || seconds;
+                    const expiryDate = new Date(Date.now() + expiresInSeconds * 1000);
+                    document.cookie = `access_token_doctor=${data.access_token}; path=/; expires=${expiryDate.toUTCString()}; Secure; SameSite=Lax`;
+
+                    window.location.href = "https://medibook.pl/doctor";
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+            });
+        </script>
+    </body>
+</html>

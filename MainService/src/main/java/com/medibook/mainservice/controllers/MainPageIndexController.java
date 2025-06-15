@@ -5,10 +5,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class MainPageIndexController {
-    /*@GetMapping("/index")
+    @GetMapping("/login")
     public String mainIndex() {
         return "index";
-    }*/
+    }
 
     @GetMapping("/contact")
     public String mainContact() {

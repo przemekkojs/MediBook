@@ -10,7 +10,7 @@
     <body>
         <section layout:fragment="content">
             <div class="container mt-4">
-                <h2 class="mb-4">Witaj, Jan Kowalski</h2>
+                <h2 class="mb-4" id="header"></h2>
 
                 <div class="row mb-5 align-items-stretch">
                     <div class="col-md-4">
@@ -27,11 +27,12 @@
                             <div>
                                 <h5 class="mb-1">Nadchodząca wizyta</h5>
                                 <p class="mb-1">
-                                    <span id="patient" class="fw-semibold">Piotr Nowak</span>,
+                                    <span id="doctor" class="fw-semibold">Piotr Nowak</span>,
                                     <span id="start-hour" class="text-muted">10:00</span> -
                                     <span id="end-hour" class="text-muted">10:30</span>
+                                    <input type="hidden" id="id">
                                 </p>
-                                <button class="btn btn-outline-primary btn-sm">Szczegóły</button>
+                                <button type="button" class="btn btn-outline-primary btn-sm">Szczegóły</button>
                             </div>
                         </div>
                     </div>
@@ -59,14 +60,25 @@
             </div>
 
             <script src="/js/date.js"></script>
+            <script src="/js/userId.js"></script>
 
             <script>
                 const tbody = document.getElementById('tbody');
+                const nextVisit = document.getElementById('next-visit');
+                const id = document.getElementById('id'); //ID WIZYTY
+                const doctor = document.getElementById('doctor');
+                const startHour = document.getElementById('start-hour');
+                const endHour = document.getElementById('end-hour');
+                const header = document.getElementById('header');
 
-                function loadVisits() {
+                function loadHeader() {
+                    console.log("loadHeader()");
+                }
+
+                function loadNextVisit() {
                     console.log("loadVisits()");
 
-                    fetch("https://medibook.pl/api/v1/visits/client")
+                    fetch(`https://medibook.pl/api/v1/visits/client/${userId}`)
                     .then(response => {
                         if (!response.ok) {
                             throw new Error("Błąd sieci: " + response.status);
@@ -95,7 +107,12 @@
                     tbody.appendChild(toAdd);
                 }
 
-                loadVisits();
+                function visitDetails() {
+                    const idValue = id.value;
+                }
+
+                loadHeader();
+                loadNextVisit();
             </script>
         </section>
     </body>

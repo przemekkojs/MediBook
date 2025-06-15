@@ -50,6 +50,10 @@ dependencies {
     testImplementation("org.springframework.amqp:spring-rabbit-test")
     testImplementation("org.springframework.security:spring-security-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+    // To teoretycznie dla RestTemplate, ale to nie działa
+    //implementation("org.apache.httpcomponents.core5:httpcore5:5.5.3")
+    //implementation("org.apache.httpcomponents.client5:httpclient5:5.5.3")
 }
 
 dependencyManagement {

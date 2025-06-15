@@ -20,6 +20,13 @@
 
                     <div class="col-md-9">
                         <form class="row g-3">
+                            <input type="hidden" id="id">
+
+                            <div class="col-md-6">
+                                <label for="username" class="form-label">Nazwa Użytkownika</label>
+                                <input type="text" class="form-control" id="username" placeholder="JanKowalski" required>
+                            </div>
+
                             <div class="col-md-6">
                                 <label for="name" class="form-label">Imię</label>
                                 <input type="text" class="form-control" id="name" placeholder="Jan" required>
@@ -30,15 +37,15 @@
                                 <input type="text" class="form-control" id="surname" placeholder="Kowalski" required>
                             </div>
 
-                            <div class="col-md-6">
+                            <!-- <div class="col-md-6">
                                 <label for="age" class="form-label">Data urodzenia</label>
                                 <input type="date" class="form-control" id="age" required>
-                            </div>
+                            </div> -->
 
-                            <div class="col-md-6">
+                            <!-- <div class="col-md-6">
                                 <label for="pesel" class="form-label">PESEL</label>
                                 <input type="number" class="form-control" id="pesel" placeholder="0123456789" required>
-                            </div>
+                            </div> -->
 
                             <div class="col-md-6">
                                 <label for="email" class="form-label">Adres e-mail</label>
@@ -51,7 +58,7 @@
                             </div>
 
                             <div class="col-12 text-end">
-                                <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
+                                <button type="button" class="btn btn-primary" onclick="saveChanges()">Zapisz zmiany</button>
                             </div>
                         </form>
                     </div>
@@ -59,12 +66,15 @@
             </div>
             
             <script>
+                const id = document.getElementById('id').value;
+                const username = document.getElementById('username');
                 const name = document.getElementById('name');
-                const surname = document.getElementById('surname');
-                const birthdate = document.getElementById('age');
-                const pesel = document.getElementById('pesel');
+                const surname = document.getElementById('surname');                
                 const email = document.getElementById('email');
                 const phone = document.getElementById('phone');
+
+                //const birthdate = document.getElementById('age');
+                //const pesel = document.getElementById('pesel');
 
                 function saveChanges() {
 
@@ -74,8 +84,9 @@
                     console.log("load()");
 
                     // Trzeba jakoś załadować ID...
+                    const userId = "";
 
-                    fetch(`https://medibook.pl/api/v1/clients/${id}`)
+                    fetch(`https://medibook.pl/api/v1/clients/${userId}`)
                     .then(response => {
                         if (!response.ok) {
                             throw new Error("Błąd sieci: " + response.status);

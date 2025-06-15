@@ -23,9 +23,9 @@ public class ProcedureController {
     @GetMapping
     public ResponseEntity<List<ProcedureDto>> getAllProcedures() {
         return ResponseEntity.ok(
-                procedureService.getProcedures()
-                        .stream().map(procedureMapper::toProcedureDto)
-                        .toList()
+            procedureService.getProcedures()
+                .stream().map(procedureMapper::toProcedureDto)
+                .toList()
         );
     }
 
@@ -45,18 +45,18 @@ public class ProcedureController {
         String username = auth.getToken().getClaimAsString(StandardClaimNames.PREFERRED_USERNAME);
 
         return ResponseEntity.ok(
-                procedureService.getProceduresFromDoctorByUsername(username)
-                        .stream().map(procedureMapper::toProcedureDto)
-                        .toList()
+            procedureService.getProceduresFromDoctorByUsername(username)
+                .stream().map(procedureMapper::toProcedureDto)
+                .toList()
         );
     }
 
     @GetMapping("/doctors/{id}")
     public ResponseEntity<List<ProcedureDto>> getDoctorProcedures(@PathVariable("id") String id) {
         return ResponseEntity.ok(
-                procedureService.getProceduresFromDoctorById(id)
-                        .stream().map(procedureMapper::toProcedureDto)
-                        .toList()
+            procedureService.getProceduresFromDoctorById(id)
+                .stream().map(procedureMapper::toProcedureDto)
+                .toList()
         );
     }
 
@@ -65,18 +65,18 @@ public class ProcedureController {
         String username = auth.getToken().getClaimAsString(StandardClaimNames.PREFERRED_USERNAME);
 
         return ResponseEntity.ok(
-                procedureMapper.toProcedureDto(
-                        procedureService.createProcedure(dto, username)
-                )
+            procedureMapper.toProcedureDto(
+                    procedureService.createProcedure(dto, username)
+            )
         );
     }
 
     @PutMapping("/doctor/{id}")
     public ResponseEntity<ProcedureDto> editProcedure(@RequestBody EditProcedureDto dto, @PathVariable("id") long id) {
         return ResponseEntity.ok(
-                procedureMapper.toProcedureDto(
-                        procedureService.editProcedure(dto,id)
-                )
+            procedureMapper.toProcedureDto(
+                    procedureService.editProcedure(dto,id)
+            )
         );
     }
 

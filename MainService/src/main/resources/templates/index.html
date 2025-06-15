@@ -42,12 +42,12 @@
 
     <script>
         function loginDoctor() {
-            const url = `https://medibook.pl/oauth/realms/doctor/protocol/open-id-connect/auth?response_type=code&client_id=development-oauth-client&redirect_uri=https://medibook.pl/doctor`;
+            const url = `https://medibook.pl/oauth/realms/doctor/protocol/openid-connect/auth?response_type=code&client_id=development-oauth-client&redirect_uri=https://medibook.pl/doctor/redirect`;
             window.location.href = url;
         }
 
         function loginClient() {
-            const url = `https://medibook.pl/oauth/realms/client/protocol/open-id-connect/auth?response_type=code&client_id=development-oauth-client&redirect_uri=https://medibook.pl/client`;
+            const url = `https://medibook.pl/oauth/realms/client/protocol/openid-connect/auth?response_type=code&client_id=development-oauth-client&redirect_uri=https://medibook.pl/client/redirect`;
             window.location.href = url;
         }
     </script>
