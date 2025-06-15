@@ -10,5 +10,6 @@ import java.util.List;
 public interface WorkhoursRepository extends JpaRepository<Workhours, Long> {
 
     Workhours findByDayAndDoctorId(int day, String doctorId);
+    Workhours findByDayAndDoctorUsername(int day, String username);
     List<Workhours> findByDoctorId(String doctorId);
 }

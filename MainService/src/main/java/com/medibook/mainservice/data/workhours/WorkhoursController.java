@@ -38,11 +38,12 @@ public class WorkhoursController {
         workhoursService.updateWorkHours(dto,day,username);
     }
 
-    @DeleteMapping("/doctor/{id}")
+    @DeleteMapping("/doctor/{day}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     @RolesAllowed({"DOCTOR"})
-    public void deleteWorkhours(@PathVariable long id) {
-        workhoursService.deleteWorkHours(id);
+    public void deleteWorkhours(@PathVariable int day, JwtAuthenticationToken auth) {
+        String username = auth.getToken().getClaimAsString(StandardClaimNames.PREFERRED_USERNAME);
+        workhoursService.deleteWorkHours(day, username);
     }
 
     @GetMapping("/{doctorId}")

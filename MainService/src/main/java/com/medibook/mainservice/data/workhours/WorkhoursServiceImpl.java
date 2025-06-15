@@ -66,8 +66,12 @@ public class WorkhoursServiceImpl implements IWorkhoursService {
     }
 
     @Override
-    public void deleteWorkHours(long id) {
-        workhoursRepository.deleteById(id);
+    public void deleteWorkHours(int day, String username) {
+        Workhours workhours = workhoursRepository.findByDayAndDoctorId(day, username);
+
+        if (workhours != null) {
+            workhoursRepository.delete(workhours);
+        }
     }
 
     @Override
