@@ -40,7 +40,7 @@
                 function loadVisits() {
                     console.log("loadVisits()");
 
-                    fetch(`https://medibook.pl/api/v1/visits/doctor/${id}`)
+                    fetch(`https://medibook.pl/api/v1/visits/doctor`)
                     .then(response => {
                         if (!response.ok) {
                             throw new Error("Błąd sieci: " + response.status);
@@ -58,6 +58,7 @@
 
                 function addChild(id, date, from, to, patient, room) {
                     const toAdd = document.createElement('tr');
+                    const encode = str => encodeURIComponent(str);
 
                     toAdd.innerHTML = `
                         <td>${date}</td>
@@ -67,8 +68,8 @@
                         <td>${room}</td>
 
                         <td>
-                            <button class="btn btn-outline-primary btn-sm" onclick="details('${id}')">Szczegóły</button>
-                            <button class="btn btn-outline-danger btn-sm" onclick="cancel('${id}')">Odwołaj</button>
+                            <button class="btn btn-outline-primary btn-sm" onclick="details('${encode(id)}')">Szczegóły</button>
+                            <button class="btn btn-outline-danger btn-sm" onclick="cancel('${encode(id)}')">Odwołaj</button>
                         </td>
                     `;
 
@@ -76,11 +77,11 @@
                 }
 
                 function details(id) {
-
+                    window.location.href = `https://medibook.pl/doctor/details?id=${id}`;
                 }
 
                 function cancel(id) {
-
+                    // TODO: Jak starczy czasu
                 }
 
                 loadVisits();

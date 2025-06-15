@@ -74,6 +74,8 @@
                     </div>
                 </div>
             </div>
+
+            <script src="/js/userId"></script>
             
             <script>
                 const id = document.getElementById('id').value;
@@ -98,7 +100,13 @@
                     // Trzeba jakoś załadować ID...
                     const userId = "";
 
-                    fetch(`https://medibook.pl/api/v1/doctors/${userId}`)
+                    fetch(`https://medibook.pl/api/v1/doctors/doctor/token/`, {
+                        method: "GET",
+                        headers: {
+                            "Authorization": "Bearer " + doctorToken,
+                            "Content-Type": "application/json"
+                        }
+                    })
                     .then(response => {
                         if (!response.ok) {
                             throw new Error("Błąd sieci: " + response.status);

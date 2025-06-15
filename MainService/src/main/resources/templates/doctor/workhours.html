@@ -79,7 +79,13 @@
                     // Tutaj się jakoś ID będzie musiało brać wgl
                     console.log("loadWorkhours()");
 
-                    fetch(`https://medibook.pl/api/v1/workhours/${id}`)
+                    fetch(`https://medibook.pl/api/v1/doctors/doctor/token/`, {
+                        method: "GET",
+                        headers: {
+                            "Authorization": "Bearer " + doctorToken,
+                            "Content-Type": "application/json"
+                        }
+                    })
                     .then(response => {
                         if (!response.ok) {
                             throw new Error("Błąd sieci: " + response.status);
@@ -89,14 +95,30 @@
                     })
                     .then(data => {
                         console.log(data);
+                        
+                        // To trzeba jakoś wziąć
+                        const doctorId = "";
+
+                        fetch(`https://medibook.pl/api/v1/workhours/${doctorId}`)
+                        .then(response2 => {
+                            if (!response2.ok) {
+                                throw new Error("Błąd sieci: " + response2.status);
+                            }
+
+                            return response2.json();
+                        })
+                        .then(data2 => {
+                            console.log(data2);
+                        })
                     })
                     .catch(error => {
                         console.error(error);
-                    });
+                    });                    
                 }
 
                 function addChild(id, weekday, from, to, room) {
                     const toAdd = document.createElement('tr');
+                    const encode = str => encodeURIComponent(str);
 
                     toAdd.innerHTML = `
                         <td>${weekday}</td>
@@ -105,7 +127,7 @@
                         <td>${room}</td>
 
                         <td>
-                            <button class="btn btn-outline-danger btn-sm" onclick="deleteWorkhour('${id}')">Usuń</button>
+                            <button class="btn btn-outline-danger btn-sm" onclick="deleteWorkhour('${encode(id)}')">Usuń</button>
                         </td>
                     `;
 

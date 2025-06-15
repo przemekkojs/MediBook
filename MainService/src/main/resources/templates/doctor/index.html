@@ -100,7 +100,7 @@
                 function loadDay() {
                     console.log("loadDay()");
 
-                    fetch(`https://medibook.pl/api/v1/visits/doctor/${userId}`)
+                    fetch(`https://medibook.pl/api/v1/visits/doctor`)
                     .then(response => {
                         if (!response.ok) {
                             throw new Error("Błąd sieci: " + response.status);
@@ -136,7 +136,7 @@
                     endHour.innerText = "";
                     id.value = "";
 
-                    fetch(`https://medibook.pl/api/v1/visits/doctor/${id.value}`)
+                    fetch(`https://medibook.pl/api/v1/visits/doctor`)
                     .then(response => {
                         if (!response.ok) {
                             throw new Error("Błąd sieci: " + response.status);
@@ -146,6 +146,7 @@
                     })
                     .then(data => {
                         console.log(data);
+                        const nextVisit = data[0]; // Czy jakoś tak...
                     })
                     .catch(error => {
                         console.error(error);
@@ -153,7 +154,8 @@
                 }
 
                 function visitDetails() {
-                    const idValue = id.value;
+                    const idValue = id.value; // To jest ID wizyty
+                    window.location.href = `https://medibook.pl/doctor/details?id=${idValue}`;
                 }
                 
                 loadHeader();
