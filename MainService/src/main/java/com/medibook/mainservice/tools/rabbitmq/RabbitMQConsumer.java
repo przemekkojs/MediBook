@@ -26,13 +26,12 @@ public class RabbitMQConsumer {
                     value = @Queue(value = "keycloak-notification-client"),
                     exchange = @Exchange(
                             name = "keycloak-notification",
-                            autoDelete = "true",
+                            durable = "true",
+                            autoDelete = "false",
                             ignoreDeclarationExceptions = "true"),
                     key = "KK.EVENT.SUCCESS.REGISTER.client")
     )
     public void listenClient(String message) throws JsonProcessingException {
-        System.out.println(message);
-
         ClientCreateDTO client = new ObjectMapper()
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
                 .readValue(message, ClientCreateDTO.class);
@@ -44,12 +43,12 @@ public class RabbitMQConsumer {
                     value = @Queue(value = "keycloak-notification-client"),
                     exchange = @Exchange(
                             name = "keycloak-notification",
-                            autoDelete = "true",
+                            durable = "true",
+                            autoDelete = "false",
                             ignoreDeclarationExceptions = "true"),
                     key = "KK.EVENT.SUCCESS.REGISTER.doctor")
     )
     public void listenDoctor(String message) throws JsonProcessingException {
-        System.out.println(message);
 
         DoctorCreateDto doctor = new ObjectMapper()
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)

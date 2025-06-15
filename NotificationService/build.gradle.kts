@@ -28,7 +28,7 @@ extra["springCloudVersion"] = "2024.0.1"
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-amqp")
     implementation("org.springframework.boot:spring-boot-starter-mail")
-    implementation("org.springframework.cloud:spring-cloud-bus")
+//    implementation("org.springframework.cloud:spring-cloud-bus")
     implementation("org.springframework.cloud:spring-cloud-stream-binder-rabbit")
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")

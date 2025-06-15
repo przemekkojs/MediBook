@@ -25,6 +25,6 @@ public class RabbitMQConfig {
 
     @Bean
     public Binding binding(Queue queue, TopicExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with("routing.key.#");
+        return BindingBuilder.bind(queue).to(exchange).with("NS.EVENT.CLIENT.VISIT");
     }
 }

@@ -22,9 +22,4 @@ public class RabbitMQConfig {
     public TopicExchange exchange() {
         return new TopicExchange(EXCHANGE_NAME);
     }
-
-    @Bean
-    public Binding binding(Queue queue, TopicExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with("routing.key.#");
-    }
 }

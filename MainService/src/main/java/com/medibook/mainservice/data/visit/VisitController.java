@@ -1,14 +1,17 @@
 package com.medibook.mainservice.data.visit;
 
 import com.medibook.mainservice.data.visit.dto.CreateVisitDto;
+import com.medibook.mainservice.data.visit.dto.TimeSchedule;
 import com.medibook.mainservice.data.visit.dto.VisitDto;
 import com.medibook.mainservice.data.visit.dto.VisitMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.core.oidc.StandardClaimNames;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -24,6 +27,14 @@ public class VisitController {
         return ResponseEntity.ok(
             visitMapper.toVisitDto(visitService.getVisit(id))
         );
+    }
+
+    @GetMapping("/schedule")
+    public ResponseEntity<TimeSchedule> getTimeSchedule(
+        @RequestParam String doctorId,
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
+    ) {
+        return ResponseEntity.ok(visitService.getTimeSchedule(doctorId, date));
     }
 
     @GetMapping("/client")

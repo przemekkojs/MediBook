@@ -25,7 +25,7 @@ public class CreateWorkhoursValidator implements Validator<CreateWorkhoursDto> {
             throw WorkhourMessage.END_TIME_NULL;
         }
 
-        if(dto.startTime().after(dto.endTime())){
+        if(dto.startTime().isAfter(dto.endTime())){
             throw WorkhourMessage.START_TIME_AFTER_END_TIME_NULL;
         }
 
