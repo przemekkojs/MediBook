@@ -13,7 +13,7 @@ SERVER_CERT="domain.crt"
 CONFIG_FILE="openssl-san.cnf"
 
 echo "### Generating CA private key"
-openssl genrsa -out ${CA_KEY} 4096
+openssl genrsa -out ${CA_KEY} 2048
 
 echo "### Generating CA certificate"
 openssl req -x509 -new -nodes -key ${CA_KEY} -sha256 -days 1024 \
@@ -31,7 +31,10 @@ openssl x509 -req -in ${SERVER_CSR} \
   -days 500 -sha256 \
   -extfile ${CONFIG_FILE} -extensions req_ext
 
-cat ${CA_KEY} ${CA_CERT} > fullchain.crt
+cat ${SERVER_CERT} ${CA_CERT} > fullchain.crt
+
+cp ${CA_CERT} ../MainService/crt/${CA_CERT}
+cp ${SERVER_CERT} ../MainService/crt/${SERVER_CERT}
 
 echo "### Certificate creation complete!"
 echo "CA Certificate: ${CA_CERT}"
