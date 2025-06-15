@@ -73,12 +73,27 @@
 
                 function loadHeader() {
                     console.log("loadHeader()");
+
+                    fetch(`https://medibook.pl/api/v1/clients/clients/client/token/${clientToken}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error("Błąd sieci: " + response.status);
+                        }
+
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log(data);
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
                 }
 
                 function loadNextVisit() {
-                    console.log("loadVisits()");
+                    console.log("loadNextVisit()");
 
-                    fetch(`https://medibook.pl/api/v1/visits/client/${userId}`)
+                    fetch(`https://medibook.pl/api/v1/visits/client/${clientToken}`)
                     .then(response => {
                         if (!response.ok) {
                             throw new Error("Błąd sieci: " + response.status);
