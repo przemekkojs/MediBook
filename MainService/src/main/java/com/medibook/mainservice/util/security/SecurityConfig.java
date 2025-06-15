@@ -37,16 +37,11 @@ public class SecurityConfig {
         return claims -> {
             var realmAccess = Optional.ofNullable((Map<String, Object>) claims.get("realm_access"));
             var roles = realmAccess.flatMap(map -> Optional.ofNullable((List<String>) map.get("roles")));
-            System.out.println(roles);
             List<GrantedAuthority> authorities =  roles.map(List::stream)
                     .orElse(Stream.empty())
                     .map(SimpleGrantedAuthority::new)
                     .map(GrantedAuthority.class::cast)
                     .toList();
-
-            for(GrantedAuthority authority : authorities) {
-                System.out.printf("%s\n", authority.getAuthority());
-            }
 
             return authorities;
         };
