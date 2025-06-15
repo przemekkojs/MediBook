@@ -43,16 +43,17 @@
 
                 function loadAll() {
                     console.log("loadAll()");
-                    
-                    const visitId = "";
 
-                    loadDetails(id);
+                    const params = new URLSearchParams(window.location.search);
+                    const visitId = params.get(id);
+
+                    loadDetails(visitId);
                 }
 
                 function loadDetails(id) {
                     console.log(`loadDetails(id=${id})`);
 
-                    fetch(`https://medibook.pl/api/v1/visits/doctor/${id}`)
+                    fetch(`https://medibook.pl/api/v1/visits/${id}`)
                     .then(response => {
                         if (!response.ok) {
                             throw new Error("Błąd sieci: " + response.status);

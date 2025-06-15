@@ -11,15 +11,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/places")
 @RequiredArgsConstructor
 public class PlaceController {
-
     private final IPlaceService placeService;
 
     @PutMapping("/doctor")
     public ResponseEntity<PlaceDto> updatePlace(@RequestBody UpdatePlaceDto dto, JwtAuthenticationToken auth) {
-
         String username = auth.getToken().getClaimAsString("preferred_username");
         Place updatedPlace = placeService.updatePlace(dto, username);
-
 
         return ResponseEntity.ok(new PlaceDto(
                 updatedPlace.getId(),
@@ -28,7 +25,6 @@ public class PlaceController {
                 updatedPlace.getAddress(),
                 updatedPlace.getDoctor().getId()
         ));
-
     }
 
     @GetMapping("/{doctor_id}")
@@ -47,6 +43,4 @@ public class PlaceController {
                 place.getDoctor().getId()
         ));
     }
-
-
 }
