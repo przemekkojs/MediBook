@@ -35,13 +35,21 @@
                 </div>
             </div>
 
+            <script src="js/userId.js"></script>
+
             <script>
                 const tbody = document.getElementById('tbody');
 
                 function loadVisits() {
                     console.log("loadVisits()");
 
-                    fetch("https://medibook.pl/api/v1/visits/client")
+                    fetch("https://medibook.pl/api/v1/visits/client", {
+                        method: "GET",
+                        headers: {
+                            "Authorization": "Bearer " + clientToken,
+                            "Content-Type": "application/json"
+                        }
+                    })
                     .then(response => {
                         if (!response.ok) {
                             throw new Error("Błąd sieci: " + response.status);
@@ -51,6 +59,8 @@
                     })
                     .then(data => {
                         console.log(data);
+
+                        // TODO
                     })
                     .catch(error => {
                         console.error(error);

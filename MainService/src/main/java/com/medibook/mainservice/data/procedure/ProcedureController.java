@@ -66,7 +66,7 @@ public class ProcedureController {
 
         return ResponseEntity.ok(
             procedureMapper.toProcedureDto(
-                    procedureService.createProcedure(dto, username)
+                procedureService.createProcedure(dto, username)
             )
         );
     }
