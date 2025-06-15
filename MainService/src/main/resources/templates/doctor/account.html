@@ -75,20 +75,13 @@
                 </div>
             </div>
 
-            <script src="/js/userId"></script>
+            <script src="/js/userId.js"></script>
             
             <script>
-                const id = document.getElementById('id').value;
-                const username = document.getElementById('username').value;
-                const name = document.getElementById('name').value;
-                const surname = document.getElementById('surname').value;
-
-                //const birthdate = document.getElementById('age').value;
-                //const pesel = document.getElementById('pesel').value;
-                //const email = document.getElementById('email').value;
-                //const phone = document.getElementById('phone').value;
-                //const place = document.getElementById('place').value;
-                //const specialization = document.getElementById('specialization').value;
+                const id = document.getElementById('id');
+                const username = document.getElementById('username');
+                const name = document.getElementById('name');
+                const surname = document.getElementById('surname');
 
                 function saveChanges() {
                     
@@ -97,10 +90,7 @@
                 function load() {
                     console.log("load()");
 
-                    // Trzeba jakoś załadować ID...
-                    const userId = "";
-
-                    fetch(`https://medibook.pl/api/v1/doctors/doctor/token/`, {
+                    fetch(`https://medibook.pl/api/v1/doctors/doctor/token`, {
                         method: "GET",
                         headers: {
                             "Authorization": "Bearer " + doctorToken,
@@ -110,12 +100,17 @@
                     .then(response => {
                         if (!response.ok) {
                             throw new Error("Błąd sieci: " + response.status);
-                        }
+                        }                       
 
                         return response.json();
                     })
                     .then(data => {
                         console.log(data);
+
+                        id.value = data.id;
+                        name.value = data.name;
+                        surname.value = data.lastName;
+                        username.value = data.username;
                     })
                     .catch(error => {
                         console.error(error);

@@ -20,7 +20,6 @@
                                     <th scope="col">Dzień tygodnia</th>
                                     <th scope="col">Od</th>
                                     <th scope="col">Do</th>
-                                    <th scope="col">Sala</th>
                                     <th scope="col">Akcja</th>
                                 </tr>
                             </thead>
@@ -40,13 +39,13 @@
                     <div>
                         <label for="day-select" class="form-label">Dzień tygodnia</label>
                         <select id="day-select" class="form-select" required>
-                            <option value="Poniedziałek" selected>Poniedziałek</option>
-                            <option value="Wtorek">Wtorek</option>
-                            <option value="Środa">Środa</option>
-                            <option value="Czwartek">Czwartek</option>
-                            <option value="Piątek">Piątek</option>
-                            <option value="Sobota">Sobota</option>
-                            <option value="Niedziela">Niedziela</option>
+                            <option value="1" selected>Poniedziałek</option>
+                            <option value="2">Wtorek</option>
+                            <option value="3">Środa</option>
+                            <option value="4">Czwartek</option>
+                            <option value="5">Piątek</option>
+                            <option value="6">Sobota</option>
+                            <option value="7">Niedziela</option>
                         </select>
                     </div>
 
@@ -61,15 +60,12 @@
                     </div>
 
                     <div>
-                        <label for="room-input" class="form-label">Sala</label>
-                        <input type="text" id="room-input" name="room-input" class="form-control" placeholder="Wpisz..." required>
-                    </div>
-
-                    <div>
                         <button type="button" class="btn btn-primary mt-4" onclick="addWorkhour(event)">Dodaj</button>
                     </div>
                 </form>
             </div>
+
+            <script src="/js/userId.js"></script>
 
             <!-- Godziny pracy -->
             <script>
@@ -79,7 +75,7 @@
                     // Tutaj się jakoś ID będzie musiało brać wgl
                     console.log("loadWorkhours()");
 
-                    fetch(`https://medibook.pl/api/v1/doctors/doctor/token/`, {
+                    fetch(`https://medibook.pl/api/v1/doctors/doctor/token`, {
                         method: "GET",
                         headers: {
                             "Authorization": "Bearer " + doctorToken,
@@ -95,11 +91,16 @@
                     })
                     .then(data => {
                         console.log(data);
-                        
-                        // To trzeba jakoś wziąć
-                        const doctorId = "";
 
-                        fetch(`https://medibook.pl/api/v1/workhours/${doctorId}`)
+                        const doctorId = data.id;
+
+                        fetch(`https://medibook.pl/api/v1/workhours/${doctorId}`, {
+                            method: "GET",
+                            headers: {
+                                "Authorization": "Bearer " + doctorToken,
+                                "Content-Type": "application/json"
+                            }
+                        })
                         .then(response2 => {
                             if (!response2.ok) {
                                 throw new Error("Błąd sieci: " + response2.status);
@@ -109,6 +110,16 @@
                         })
                         .then(data2 => {
                             console.log(data2);
+
+                            data2.forEach(element => {
+                                console.log(element);
+
+                                const wd = element.day;
+                                const f = element.startTIme;
+                                const t = element.endTime;
+
+                                addChild(wd, f, t);
+                            });
                         })
                     })
                     .catch(error => {
@@ -116,38 +127,148 @@
                     });                    
                 }
 
-                function addChild(id, weekday, from, to, room) {
+                function addChild(weekday, from, to) {
                     const toAdd = document.createElement('tr');
                     const encode = str => encodeURIComponent(str);
 
                     toAdd.innerHTML = `
-                        <td>${weekday}</td>
-                        <td>${from}</td>
-                        <td>${to}</td>
-                        <td>${room}</td>
+                        <td>
+                            <select id="day-select-${weekday}" class="form-select" required>
+                                <option value="0">Poniedziałek</option>
+                                <option value="1">Wtorek</option>
+                                <option value="2">Środa</option>
+                                <option value="3">Czwartek</option>
+                                <option value="4">Piątek</option>
+                                <option value="5">Sobota</option>
+                                <option value="6">Niedziela</option>
+                            </select>
+                        </td>
+                        <td><input type="time" id="start-hour-select-${weekday}" name="start-hour-select" class="form-control" required></td>
+                        <td><input type="time" id="end-hour-select-${weekday}" name="end-hour-select" class="form-control" required></td>
 
                         <td>
-                            <button class="btn btn-outline-danger btn-sm" onclick="deleteWorkhour('${encode(id)}')">Usuń</button>
+                            <button class="btn btn-outline-primary btn-sm me-1" onclick="editWorkhour('${encode(weekday)}')">Edytuj</button>
+                            <button class="btn btn-outline-danger btn-sm" onclick="deleteWorkhour('${encode(weekday)}')">Usuń</button>
                         </td>
                     `;
 
                     tbody.appendChild(toAdd);
+                    
+                    let weekdayName = "Poniedziałek";
+
+                    switch(weekday) {
+                        case 2:
+                            weekdayName = "Wtorek";
+                            break;
+                        case 3:
+                            weekdayName = "Środa";
+                            break;
+                        case 4:
+                            weekdayName = "Czwartek";
+                            break;
+                        case 5:
+                            weekdayName = "Piątek";
+                            break;
+                        case 6:
+                            weekdayName = "Sobota";
+                            break;
+                        case 7:
+                            weekdayName = "Niedziela";
+                            break;
+                    }
+
+                    document.getElementById(`day-select-${weekday}`).value = weekday;
+                    document.getElementById(`start-hour-select-${weekday}`).value = from;
+                    document.getElementById(`end-hour-select-${weekday}`).value = to;
                 }
 
-                function deleteWorkhour(id) {
-
-                }
+                loadWorkhours();
             </script>
 
-            <!-- Dodawanie -->
+            <!-- Operacje -->
             <script>
+                function deleteWorkhour(day) {
+                    if (!confirm("Czy na pewno chcesz usunąć te godziny pracy?"))
+                        return;
+
+                    fetch(`https://medibook.pl/api/v1/workhours/doctor/${day}`, {
+                        method: 'DELETE',
+                        headers: {
+                            "Authorization": "Bearer " + doctorToken,
+                            "Content-Type": "application/json" 
+                        }                                               
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            alert("Godziny pracy usunięte"); // To trzeba ładniej
+                            location.reload();
+                        }
+                        else {
+                            alert("Błąd usuwania godzin pracy"); // To trzeba ładniej
+                        }
+                    });
+                }
+
+                function editWorkhour(day) {
+                    let from = document.getElementById(`start-hour-select-${day}`).value;
+                    let to = document.getElementById(`end-hour-select-${day}`).value;
+
+                    const data = {
+                        startTime: from + ":00",
+                        endTime: to + ":00"
+                    };
+
+                    fetch(`https://medibook.pl/api/v1/workhours/doctor/${day}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            "Authorization": "Bearer " + doctorToken
+                        },
+                        body: JSON.stringify(data)
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            alert("Godziny pracy zaktualizowane"); // To trzeba ładniej
+                            location.reload();
+                        }
+                        else {
+                            alert("Błąd edycji godzin pracy"); // To trzeba ładniej
+                        }
+                    });
+                }
+                
                 function addWorkhour(event) {
                     event.preventDefault();
 
                     const weekday = document.getElementById('day-select').value;
                     const from = document.getElementById('start-hour-select').value;
                     const to = document.getElementById('end-hour-select').value;
-                    const room = document.getElementById('room-input').value;
+
+                    const data = {
+                        day: parseInt(weekday),
+                        startTime: from + ":00",
+                        endTime: to + ":00"
+                    };
+
+                    console.log('data', data);
+
+                    fetch('https://medibook.pl/api/v1/workhours/doctor', {
+                        method: 'POST',
+                        headers: {
+                            "Authorization": "Bearer " + doctorToken,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            alert("Godziny pracy dodane"); // To zamienić na coś ładniejszego
+                            location.reload();
+                        }
+                        else {
+                            alert("Błąd dodawania godzin pracy"); // To zamienić na coś ładniejszego
+                        }
+                    });
                 }
             </script>
         </section>
