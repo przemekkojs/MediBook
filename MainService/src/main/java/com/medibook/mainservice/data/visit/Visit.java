@@ -37,5 +37,4 @@ public class Visit {
     private Doctor doctor;
 
     private BigDecimal totalPrice;
-
 }

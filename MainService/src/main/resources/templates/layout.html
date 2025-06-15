@@ -12,15 +12,15 @@
 
         <link rel="icon" type="image/x-icon" href="/images/icon.png" />
         <link rel="stylesheet" href="/style/bootstrap.min.css" />
-        <link rel="stylesheet" href="/style/styles.css" /> <!-- !!! MUSI BYĆ PO BOOTSTRAPIE !!! -->        
+        <link rel="stylesheet" href="/style/style.css" /> <!-- !!! MUSI BYĆ PO BOOTSTRAPIE !!! -->
     </head>
 
     <body class="min-vh-100 d-flex flex-column m-0 txt-body">
         <header>
             <nav class="navbar navbar-expand-lg navbar-light bg-primary border-bottom pe-5">
                 <div class="container-fluid">
-                    <a class="navbar-brand d-flex align-items-center" href="#">
-                        <img src="images/logo.png" alt="Logo strony - książka z krzyżem lekarskim" width="40" height="40" class="me-2 rounded">
+                    <a class="navbar-brand d-flex align-items-center" th:href="@{${homePath}}">
+                        <img src="/images/logo.png" alt="Logo strony - książka z krzyżem lekarskim" width="40" height="40" class="me-2 rounded">
 
                         <span class="txt-header">MediBook</span>
                     </a>
@@ -31,27 +31,26 @@
 
                     <div class="collapse navbar-collapse" id="navbarNavDropdown">
                         <ul class="navbar-nav ms-auto">
-
-                            <!-- To trzeba jakoś programowo wypełniać -->
+                            <th:block layout:fragment="extra-navbar"></th:block>
 
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle txt-header" href="#" id="help-dropdown" role="button" data-bs-toggle="dropdown">
-                                    Pomoc <img src="images/icons/help.svg" class="w-25 h-25 img-light">
+                                <a class="nav-link dropdown-toggle txt-header" th:href="@{/help}" id="help-dropdown" role="button" data-bs-toggle="dropdown">
+                                    Pomoc <img src="/images/icons/help.svg" class="w-25 h-25 img-light">
                                 </a>
 
                                 <ul class="dropdown-menu" aria-labelledby="help-dropdown">
-                                    <li><a class="dropdown-item" href="#">Kontakt</a></li>
+                                    <li><a class="dropdown-item" th:href="@{/contact}">Kontakt</a></li>
                                 </ul>
                             </li>
 
                             <li class="nav-item dropdown me-5">
-                                <a class="nav-link dropdown-toggle txt-header" href="#" id="help-dropdown" role="button" data-bs-toggle="dropdown">
-                                    Konto <img src="images/icons/person.svg" class="w-25 h-25 img-light">
+                                <a class="nav-link dropdown-toggle txt-header" href="#" id="account-dropdown" role="button" data-bs-toggle="dropdown">
+                                    Konto <img src="/images/icons/person.svg" class="w-25 h-25 img-light">
                                 </a>
 
-                                <ul class="dropdown-menu" aria-labelledby="help-dropdown">
-                                    <li><a class="dropdown-item" href="#">Ustawienia</a></li>
-                                    <li><a class="dropdown-item" href="#">Wyloguj</a></li>
+                                <ul class="dropdown-menu" aria-labelledby="account-dropdown">
+                                    <li><a class="dropdown-item" th:href="@{${homePath} + '/account'}">Ustawienia</a></li>
+                                    <li><a class="dropdown-item" th:href="@{/}">Wyloguj</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -74,5 +73,4 @@
     </body>
 
     <script src="/js/bootstrap.bundle.min.js"></script>
-    <script src="../static/js/bootstrap.bundle.min.js"></script>
 </html>

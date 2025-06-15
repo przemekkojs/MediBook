@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout}">
+      layout:decorate="~{client/layout-client}">
 
     <head>
         <title layout:fragment="title">Zapisz się na wizytę</title>
@@ -9,7 +9,108 @@
 
     <body>
         <section layout:fragment="content">
-            
+            <div class="container py-4">
+                <h2 class="mb-4">Rezerwacja wizyty</h2>
+
+                <form class="card p-4 mb-4 shadow-sm">
+                    <div class="row g-3 align-items-end">
+                        <div class="col-md-3">
+                            <label for="doctor" class="form-label">Lekarz</label>
+                            <input type="text" class="form-control" id="doctor" placeholder="Wpisz...">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="specialization" class="form-label">Specjalizacja</label>
+                            <input type="text" class="form-control" id="specialization" placeholder="Wpisz...">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="date" class="form-label">Data</label>
+                            <input type="date" class="form-control" id="date">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="place" class="form-label">Miejsce</label>
+                            <input type="text" class="form-control" id="place" placeholder="Szpital Wrocław">
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-primary w-100" onclick="load()">Filtruj</button>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="table-responsive shadow-sm">
+                    <table class="table table-striped align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Lekarz</th>
+                                <th>Specjalizacja</th>
+                                <th>Miejsce</th>
+                                <th>Sala</th>
+                                <th>Data</th>
+                                <th>Godzina rozpoczęcia</th>
+                                <th>Godzina zakończenia</th>
+                                <th>Akcja</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="tbody">
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+            <script>
+                const tbody = document.getElementById('tbody');
+
+                function load() {
+                    console.log("load()");
+
+                    const doctor = document.getElementById('doctor').value;
+                    const specialization = document.getElementById('specialization').value;
+                    const date = document.getElementById('date').value;
+                    const place = document.getElementById('place').value;
+
+                    fetch("http://medibook.pl/api/v1/doctors")
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error("Błąd sieci: " + response.status);
+                        }
+
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log(data);
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+                }
+
+                function createRow(id, doctor, spec, place, room, date, startHour, endHour) {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${doctor}</td>
+                        <td>${spec}</td>
+                        <td>${place}</td>
+                        <td>${room}</td>
+                        <td>${date}</td>
+                        <td>${startHour}</td>
+                        <td>${endHour}</td>
+
+                        <td>
+                            <button class="btn btn-success btn-sm" onclick="makeAppointment('${id}')">Zarezerwuj</button>
+                        </td>
+                    `;
+
+                    tbody.appendChild(row);
+                }
+
+                function makeAppointment(id) {
+
+                }
+
+                load();
+            </script>
         </section>
     </body>
 </html>

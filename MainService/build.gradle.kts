@@ -39,6 +39,7 @@ dependencies {
 //  BEGIN_PK:
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.cloud:spring-cloud-starter-bootstrap")
+    implementation("nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.2.0")
 //  END_PK:
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.8")
 
@@ -49,6 +50,10 @@ dependencies {
     testImplementation("org.springframework.amqp:spring-rabbit-test")
     testImplementation("org.springframework.security:spring-security-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+    // To teoretycznie dla RestTemplate, ale to nie działa
+    //implementation("org.apache.httpcomponents.core5:httpcore5:5.5.3")
+    //implementation("org.apache.httpcomponents.client5:httpclient5:5.5.3")
 }
 
 dependencyManagement {

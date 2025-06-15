@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout}">
+      layout:decorate="~{doctor/layout-doctor}">
 
     <head>
         <title layout:fragment="title">Strona główna</title>
@@ -9,7 +9,126 @@
 
     <body>
         <section layout:fragment="content">
+            <div class="container mt-4">
+                <h2 class="mb-4">Witaj, Jan Kowalski</h2>
+
+                <div class="row mb-5 align-items-stretch">
+                    <div class="col-md-4">
+                        <div class="h-100 border rounded bg-light p-3 text-center shadow-sm">
+                            <h5 class="mb-2">Dzisiaj</h5>
+                            <div class="fs-4 fw-semibold" id="day-name">Poniedziałek</div>
+                            <div class="fs-5 text-muted" id="date">10 czerwca 2025</div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-8">
+                        <div class="h-100 border rounded bg-white p-3 shadow-sm d-flex align-items-center">
+                            <img src="/images/icons/stethoscope.svg" alt="Ikona stetoskopu" width="40" height="40" class="me-3">
+                            <div>
+                                <h5 class="mb-1">Nadchodząca wizyta</h5>
+
+                                <p class="mb-1">
+                                    <span id="patient" class="fw-semibold">Piotr Nowak</span>,
+                                    <span id="start-hour" class="text-muted">10:00</span> -
+                                    <span id="end-hour" class="text-muted">10:30</span>
+                                    <input type="hidden" value="" id="id">
+                                </p>
+                                <button class="btn btn-outline-primary btn-sm" onclick="visitDetails()">Szczegóły</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="mb-3">Twój dzień</h3>
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped table-bordered align-middle shadow-sm">
+                            <thead class="table-primary">
+                                <tr>
+                                    <th scope="col">Od</th>
+                                    <th scope="col">Do</th>
+                                    <th scope="col">Sala</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="tbody">
+                                <!-- JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
             
+            <script>
+                const tbody = document.getElementById('tbody');
+                const nextVisit = document.getElementById('next-visit');
+                const id = document.getElementById('id');
+
+                function loadDay() {
+                    console.log("loadDay()");
+
+                    fetch(`https://medibook.pl/api/v1/visits/doctor/${id}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error("Błąd sieci: " + response.status);
+                        }
+
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log(data);
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+                }
+
+                function addChild(from, to, room, place) {
+                    const toAdd = document.createElement('tr');
+
+                    toAdd.innerHTML = `
+                        <td>${from}</td>
+                        <td>${to}</td>
+                        <td>${room}</td>
+                    `;
+
+                    tbody.appendChild(toAdd);
+                }
+
+                function loadNextVisit() {
+                    const patient = document.getElementById('patient');
+                    const startHour = document.getElementById('start-hour');
+                    const endHour = document.getElementById('end-hour');
+                    
+                    patient.innerText = "";
+                    startHour.innerText = "";
+                    endHour.innerText = "";
+                    id.value = "";
+
+                    fetch(`https://medibook.pl/api/v1/visits/doctor/${id}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error("Błąd sieci: " + response.status);
+                        }
+
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log(data);
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+                }
+
+                function visitDetails() {
+                    const idValue = id.value;
+                }
+
+                loadDay();
+            </script>
+
+            <script src="/js/date.js"></script>
         </section>
     </body>
 </html>

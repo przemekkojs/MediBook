@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout}">
+      layout:decorate="~{doctor/layout-doctor}">
 
     <head>
         <title layout:fragment="title">Moje wizyty</title>
@@ -9,7 +9,82 @@
 
     <body>
         <section layout:fragment="content">
-            
+            <div class="container my-4">
+                <h3 class="mb-3">Nadchodzące wizyty</h3>
+
+                <div class="container my-4">
+                    <div id="incoming-visits">
+                        <table class="table table-bordered table-striped align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th scope="col">Data</th>
+                                    <th scope="col">Od</th>
+                                    <th scope="col">Do</th>
+                                    <th scope="col">Pacjent</th>
+                                    <th scope="col">Sala</th>
+                                    <th scope="col">Akcja</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="tbody">
+                                <!-- JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                const tbody = document.getElementById('tbody');
+
+                function loadVisits() {
+                    console.log("loadVisits()");
+
+                    fetch(`https://medibook.pl/api/v1/visits/doctor/${id}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error("Błąd sieci: " + response.status);
+                        }
+
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log(data);
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+                }
+
+                function addChild(id, date, from, to, patient, room) {
+                    const toAdd = document.createElement('tr');
+
+                    toAdd.innerHTML = `
+                        <td>${date}</td>
+                        <td>${from}</td>
+                        <td>${to}</td>
+                        <td>${patient}</td>
+                        <td>${room}</td>
+
+                        <td>
+                            <button class="btn btn-outline-primary btn-sm" onclick="details('${id}')">Szczegóły</button>
+                            <button class="btn btn-outline-danger btn-sm" onclick="cancel('${id}')">Odwołaj</button>
+                        </td>
+                    `;
+
+                    tbody.appendChild(toAdd);
+                }
+
+                function details(id) {
+
+                }
+
+                function cancel(id) {
+
+                }
+
+                loadVisits();
+            </script>
         </section>
     </body>
 </html>

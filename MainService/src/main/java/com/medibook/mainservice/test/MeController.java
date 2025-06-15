@@ -17,16 +17,5 @@ public class MeController {
                 auth.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList());
     }
 
-    @GetMapping("doctor")
-    public String getHelloDoctor(){
-        return "Hello Doctor";
-    }
-
-    @GetMapping("client")
-    public String getHelloClient(){
-        return "Hello Client";
-    }
-
     public record UserInfoDto(String name, List roles) {}
-
 }

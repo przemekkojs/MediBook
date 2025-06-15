@@ -22,7 +22,7 @@ public class VisitController {
     @GetMapping("/{id}")
     public ResponseEntity<VisitDto> getVisit(long id) {
         return ResponseEntity.ok(
-                visitMapper.toVisitDto(visitService.getVisit(id))
+            visitMapper.toVisitDto(visitService.getVisit(id))
         );
     }
 
@@ -30,11 +30,10 @@ public class VisitController {
     public ResponseEntity<List<VisitDto>> getAllVisitsFromClient(JwtAuthenticationToken auth) {
         String username = auth.getToken().getClaimAsString(StandardClaimNames.PREFERRED_USERNAME);
 
-
         return ResponseEntity.ok(
-                visitService.getAllVisitsFromClient(username)
-                        .stream().map(visitMapper::toVisitDto)
-                        .toList()
+            visitService.getAllVisitsFromClient(username)
+                .stream().map(visitMapper::toVisitDto)
+                .toList()
         );
     }
 
@@ -42,11 +41,10 @@ public class VisitController {
     public ResponseEntity<List<VisitDto>> getAllVisitsFromDoctor(JwtAuthenticationToken auth) {
         String username = auth.getToken().getClaimAsString(StandardClaimNames.PREFERRED_USERNAME);
 
-
         return ResponseEntity.ok(
-                visitService.getAllVisitsFromDoctor(username)
-                        .stream().map(visitMapper::toVisitDto)
-                        .toList()
+            visitService.getAllVisitsFromDoctor(username)
+                .stream().map(visitMapper::toVisitDto)
+                .toList()
         );
     }
 
@@ -55,8 +53,7 @@ public class VisitController {
         String username = auth.getToken().getClaimAsString(StandardClaimNames.PREFERRED_USERNAME);
 
         return ResponseEntity.ok(
-                visitMapper.toVisitDto(visitService.createVisit(visitDto, username))
+            visitMapper.toVisitDto(visitService.createVisit(visitDto, username))
         );
     }
-
 }

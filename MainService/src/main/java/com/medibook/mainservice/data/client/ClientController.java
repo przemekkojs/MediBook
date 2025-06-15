@@ -24,6 +24,11 @@ public class ClientController {
         return ResponseEntity.ok(keycloakService.getClients());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ClientDTO> getClient(String id) {
+        return ResponseEntity.ok(keycloakService.getClient(id));
+    }
+
     @GetMapping("/client/token")
     public ResponseEntity<ClientDTO> getClientFromToken(JwtAuthenticationToken auth) {
         String username = auth.getToken().getClaimAsString("preferred_username");

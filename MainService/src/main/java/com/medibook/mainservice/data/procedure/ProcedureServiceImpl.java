@@ -26,7 +26,6 @@ public class ProcedureServiceImpl implements IProcedureService {
 
     private final IDoctorService doctorService;
 
-
     @Override
     public Procedure getProcedure(long id) {
         return procedureRepository.findById(id).orElse(null);
