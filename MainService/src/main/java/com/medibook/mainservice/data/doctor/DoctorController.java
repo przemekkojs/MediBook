@@ -8,6 +8,7 @@ import com.medibook.mainservice.tools.keycloak.KeycloakService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +30,18 @@ public class DoctorController {
     @GetMapping
     public ResponseEntity<List<DoctorDto>> getDoctors() {
         return ResponseEntity.ok(keycloakService.getDoctors());
+    }
+
+    @GetMapping("/doctor/token")
+    public ResponseEntity<DoctorDto> getDoctorFromToken(JwtAuthenticationToken auth) {
+        String username = auth.getToken().getClaimAsString("preferred_username");
+        DoctorDto doctor = keycloakService.getDoctorByUsername(username);
+
+        if (doctor == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(doctor);
     }
 
     @GetMapping("/{id}")
