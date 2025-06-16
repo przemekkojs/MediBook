@@ -5,10 +5,7 @@ import com.medibook.mainservice.tools.keycloak.KeycloakService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,7 +22,7 @@ public class ClientController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ClientDTO> getClient(String id) {
+    public ResponseEntity<ClientDTO> getClient(@PathVariable String id) {
         return ResponseEntity.ok(keycloakService.getClient(id));
     }
 

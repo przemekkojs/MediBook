@@ -50,6 +50,8 @@
 
                                 <ul class="dropdown-menu" aria-labelledby="account-dropdown">
                                     <li><a class="dropdown-item" th:href="@{${homePath} + '/account'}">Ustawienia</a></li>
+                                    <li th:if="${#strings.contains(homePath, 'doctor')}"><a class="dropdown-item" th:href="'https://medibook.pl/oauth/realms/doctor/account'" target="_blank" rel="noopener noreferrer">Konto</a></li>
+                                    <li th:if="${#strings.contains(homePath, 'client')}"><a class="dropdown-item" th:href="'https://medibook.pl/oauth/realms/client/account'" target="_blank" rel="noopener noreferrer">Konto</a></li>
                                     <li><a class="dropdown-item" th:href="@{/}">Wyloguj</a></li>
                                 </ul>
                             </li>

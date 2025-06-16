@@ -34,7 +34,7 @@ public class DoctorController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<DoctorDto> getDoctor(String id) {
+    public ResponseEntity<DoctorDto> getDoctor(@PathVariable String id) {
         return ResponseEntity.ok(keycloakService.getDoctor(id));
     }
 }
