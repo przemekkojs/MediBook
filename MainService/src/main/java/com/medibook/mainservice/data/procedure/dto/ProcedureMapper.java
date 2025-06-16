@@ -9,6 +9,7 @@ public class ProcedureMapper {
     public ProcedureDto toProcedureDto(Procedure procedure) {
         return new ProcedureDto(
                 procedure.getId(),
+                procedure.getDoctor().getId(),
                 procedure.getName(),
                 procedure.getDescription(),
                 procedure.getPrice(),

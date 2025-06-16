@@ -15,6 +15,7 @@ import com.medibook.mainservice.data.workhours.Workhours;
 import com.medibook.mainservice.tools.keycloak.KeycloakService;
 import com.medibook.mainservice.tools.rabbitmq.RabbitMQService;
 import com.medibook.mainservice.tools.rabbitmq.dto.ClientVisitConfirmation;
+import com.medibook.mainservice.util.exception.ApplicationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
@@ -79,6 +80,7 @@ public class VisitServiceImpl implements IVisitService {
                 .startTime(visitDto.startTime())
                 .procedure(procedure)
                 .date(visitDto.date())
+                .state(VisitState.CREATED)
                 .doctor(doctor)
                 .totalPrice(procedure.getPrice())
                 .build();
@@ -102,7 +104,8 @@ public class VisitServiceImpl implements IVisitService {
     }
 
     public TimeSchedule getTimeSchedule(String id, LocalDate date) {
-        List<Visit> visits = visitRepository.findAllByDoctorIdAndDate(id, date);
+        List<Visit> visits = visitRepository.findAllByDoctorIdAndDate(id, date)
+                .stream().filter(visit -> visit.getState() == VisitState.CREATED).toList();
         Integer dayOfWeek = date.getDayOfWeek().getValue();
 
         Workhours workhours = workhoursService.getWorkHoursForDoctor(id)
@@ -137,4 +140,57 @@ public class VisitServiceImpl implements IVisitService {
     public void deleteVisit(long id) {
         visitRepository.deleteById(id);
     }
+
+    @Override
+    public Visit finishVisit(long id, String username) {
+        Visit visit = visitRepository.findByIdAndDoctorUsername(id, username);
+
+        if (visit == null) {
+            throw new ApplicationException("visit/0001", "Visit not found or you are not authorized to finish this visit",401);
+        }
+
+        if (visit.getState() != VisitState.CREATED){
+            throw new ApplicationException("visit/0002", "Visit is already finished or cancelled", 400);
+        }
+
+        visit.setState(VisitState.FINISHED);
+
+        return visitRepository.save(visit);
+    }
+
+    @Override
+    public Visit cancelVisitClient(long id, String username) {
+        Visit visit = visitRepository.findByIdAndClientUsername(id, username);
+
+        if (visit == null) {
+            throw new ApplicationException("visit/0001", "Visit not found or you are not authorized to cancel this visit",401);
+        }
+
+        if (visit.getState() != VisitState.CREATED){
+            throw new ApplicationException("visit/0002", "Visit is already finished or cancelled", 400);
+        }
+
+        visit.setState(VisitState.CANCELLED);
+
+        return visitRepository.save(visit);
+    }
+
+    @Override
+    public Visit cancelVisitDoctor(long id, String username) {
+        Visit visit = visitRepository.findByIdAndDoctorUsername(id, username);
+
+        if (visit == null) {
+            throw new ApplicationException("visit/0001", "Visit not found or you are not authorized to cancel this visit",401);
+        }
+
+        if (visit.getState() != VisitState.CREATED){
+            throw new ApplicationException("visit/0002", "Visit is already finished or cancelled", 400);
+        }
+
+        visit.setState(VisitState.CANCELLED);
+
+        return visitRepository.save(visit);
+    }
+
+
 }

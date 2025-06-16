@@ -27,6 +27,8 @@ public class Visit {
     @ManyToOne(fetch = FetchType.EAGER)
     private Client client;
 
+    private VisitState state;
+
     private LocalTime startTime;
 
     private LocalDate date;

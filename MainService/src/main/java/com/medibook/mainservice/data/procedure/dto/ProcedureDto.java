@@ -5,6 +5,7 @@ import java.time.LocalTime;
 
 public record ProcedureDto(
     long id,
+    String doctorId,
     String name,
     String description,
     BigDecimal price,

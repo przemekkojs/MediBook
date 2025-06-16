@@ -59,12 +59,39 @@ public class VisitController {
         );
     }
 
+    @PutMapping("/doctor/finish/{id}")
+    public ResponseEntity<VisitDto> finishVisit(@PathVariable long id, JwtAuthenticationToken auth) {
+        String username = auth.getToken().getClaimAsString(StandardClaimNames.PREFERRED_USERNAME);
+
+        return ResponseEntity.ok(
+            visitMapper.toVisitDto(visitService.finishVisit(id, username))
+        );
+    }
+
     @PostMapping("/client")
     public ResponseEntity<VisitDto> createVisit(@RequestBody CreateVisitDto visitDto, JwtAuthenticationToken auth) {
         String username = auth.getToken().getClaimAsString(StandardClaimNames.PREFERRED_USERNAME);
 
         return ResponseEntity.ok(
             visitMapper.toVisitDto(visitService.createVisit(visitDto, username))
+        );
+    }
+
+    @DeleteMapping("/cleint/cancel/{id}")
+    public ResponseEntity<VisitDto> cancelVisitClient(@PathVariable long id, JwtAuthenticationToken auth) {
+        String username = auth.getToken().getClaimAsString(StandardClaimNames.PREFERRED_USERNAME);
+
+        return ResponseEntity.ok(
+            visitMapper.toVisitDto(visitService.cancelVisitClient(id, username))
+        );
+    }
+
+    @DeleteMapping("/doctor/cancel/{id}")
+    public ResponseEntity<VisitDto> cancelVisitDoctor(@PathVariable long id, JwtAuthenticationToken auth) {
+        String username = auth.getToken().getClaimAsString(StandardClaimNames.PREFERRED_USERNAME);
+
+        return ResponseEntity.ok(
+            visitMapper.toVisitDto(visitService.cancelVisitDoctor(id, username))
         );
     }
 }

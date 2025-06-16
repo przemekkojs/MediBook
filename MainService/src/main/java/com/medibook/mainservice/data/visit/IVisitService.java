@@ -17,4 +17,10 @@ public interface IVisitService {
     public TimeSchedule getTimeSchedule(String id, LocalDate date);
 
     void deleteVisit(long id);
+
+    Visit finishVisit(long id, String username);
+
+    Visit cancelVisitClient(long id, String username);
+
+    Visit cancelVisitDoctor(long id, String username);
 }

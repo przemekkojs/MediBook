@@ -9,6 +9,7 @@ public class VisitMapper {
         return new VisitDto(
             visit.getClient().getId(),
             visit.getDoctor().getId(),
+            visit.getState().toString(),
             visit.getProcedure().getId(),
             visit.getStartTime().toString(),
             visit.getDate().toString()
