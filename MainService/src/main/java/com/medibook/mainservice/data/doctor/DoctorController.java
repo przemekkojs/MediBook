@@ -8,6 +8,7 @@ import org.springframework.http.*;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 @RequestMapping("/api/v1/doctors")
@@ -34,7 +35,9 @@ public class DoctorController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<DoctorDto> getDoctor(String id) {
-        return ResponseEntity.ok(keycloakService.getDoctor(id));
+    public ResponseEntity<DoctorDto> getDoctor(@PathVariable String id) {
+        System.out.println(id);
+        DoctorDto doctor = keycloakService.getDoctor(id);
+        return ResponseEntity.ok(doctor);
     }
 }

@@ -77,13 +77,17 @@ public class KeycloakService {
         UserResource userResource = keycloak.realm(clientRealm).users().get(id);
         UserRepresentation user = userResource.toRepresentation();
 
+        if(user == null) {
+            return null;
+        }
+
         return new ClientDTO(
-                user.getId(),
-                user.getUsername(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getEmail(),
-                ""
+            user.getId(),
+            user.getUsername(),
+            user.getFirstName(),
+            user.getLastName(),
+            user.getEmail(),
+            ""
         );
     }
 
@@ -92,6 +96,10 @@ public class KeycloakService {
 
         UserResource userResource = keycloak.realm(doctorRealm).users().get(id);
         UserRepresentation user = userResource.toRepresentation();
+
+        if(user == null) {
+            return null;
+        }
 
         return new DoctorDto(
                 user.getId(),

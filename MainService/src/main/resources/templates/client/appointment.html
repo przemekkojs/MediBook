@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{client/layout-client}">
+
+    <head>
+        <title layout:fragment="title">Zarezerwuj</title>
+    </head>
+
+    <body>
+        <section layout:fragment="content">
+            <h1 class="mb-4">Zarezerwuj wizytę</h1>
+
+            <div class="card p-3 shadow-sm">
+                <div class="row mb-2">
+                    <div class="col-sm-3 fw-bold">Doktor:</div>
+                    <div class="col-sm-9" id="doctor"></div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-3 fw-bold">Nazwa zabiegu:</div>
+                    <div class="col-sm-9" id="name"></div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-3 fw-bold">Opis zabiegu:</div>
+                    <div class="col-sm-9" id="description"></div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-3 fw-bold">Cena:</div>
+                    <div class="col-sm-9" id="price"></div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-3 fw-bold">Czas trwania:</div>
+                    <div class="col-sm-9" id="duration"></div>
+                </div>
+            </div>
+
+            <div>
+                <h4>Dostępne godziny:</h4>
+
+                <div id="avaiable-hours">
+
+                </div>
+            </div>
+
+            <div>
+                <form>
+                    <h4>Rezerwacja</h4>
+                    <form>
+                        <div class="mb-3">
+                            <label for="date" class="form-label">Data</label>
+                            <input type="date" class="form-control" id="date" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="startTime" class="form-label">Godzina rozpoczęcia</label>
+                            <input type="time" class="form-control" id="startTime" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="endTime" class="form-label">Godzina zakończenia</label>
+                            <input type="time" class="form-control" id="endTime" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <button type="button" class="btn btn-primary" value="Potwierdź" id="confirm">Potwierdź</button>
+                        </div>
+                    </form>
+                </form>
+            </div>
+
+            <script src="/js/userId.js"></script>
+
+            <script>
+                const appointmentId = new URLSearchParams(window.location.search).get("id");
+
+                const doctor = document.getElementById('doctor');
+                const name = document.getElementById('name');
+                const description = document.getElementById('description');
+                const price = document.getElementById('price');
+                const duration = document.getElementById('duration');
+                const avaiableHours = document.getElementById('avaiable-hours');
+                const confirmButton = document.getElementById('confirm');
+
+                const date = document.getElementById('date');
+                const startTime = document.getElementById('startTime');
+                const endTime = document.getElementById('endTime');                
+
+                function loadAll() {
+                    console.log("loadAll()");                    
+
+                    loadDetails(appointmentId);
+
+                    startTime.addEventListener("input", function () {
+                        const startTimeValue = startTime.value;
+
+                        if (startTimeValue) {
+                            const endTimeValue = createEndTime(startTimeValue, duration.innerText);
+                            endTime.value = endTimeValue;
+                        }
+                    });
+                }
+
+                function createEndTime(startTime, duration) {
+                    console.log(startTime);
+                    console.log(duration);
+
+                    const [h, m] = startTime.split(":").map(Number);
+                    const [dh, dm, ds] = duration.split(":").map(Number);
+
+                    const startDate = new Date();
+                    startDate.setHours(h, m, 0);
+
+                    const endDate = new Date(startDate.getTime() + (dh * 3600 + dm * 60 + ds) * 1000);
+
+                    const endHours = String(endDate.getHours()).padStart(2, '0');
+                    const endMinutes = String(endDate.getMinutes()).padStart(2, '0');
+
+                    return `${endHours}:${endMinutes}`;
+                }
+
+                function getAvaiableHours(doctorId, date) {
+                    fetch(`https://medibook.pl/api/v1/visits/schedule?doctorId=${doctorId}&date=${date}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error("Błąd podczas pobierania harmonogramu");
+                        }
+
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log("gah data", data);
+                        
+                        avaiableHours.innerHTML = "";
+
+                        data.timeSegments.forEach(element => {
+                            console.log("element", element);
+                            avaiableHours.innerHTML += `${element.start} - ${element.end}<br>`
+                        });
+                    })
+                    .catch(error => {
+                        console.error("Wystąpił błąd:", error);
+                    });
+                }
+
+                function loadDetails(id) {
+                    fetch(`https://medibook.pl/api/v1/procedures/${id}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error("Błąd sieci: " + response.status);
+                        }
+
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log("data", data);
+
+                        const doctorId = data.doctorId;
+                        name.innerText = data.name;
+                        description.innerText = data.description;
+                        price.innerText = data.price;
+                        duration.innerText = data.length;
+
+                        confirmButton.onclick = (event) => {
+                            confirmAppointment(event, doctorId);
+                        };
+
+                        date.addEventListener("input", function() {
+                            const dateValue = date.value;
+
+                            if (dateValue) {
+                                getAvaiableHours(doctorId, date.value);
+                            }
+                        });
+
+                        //fetch(`https://medibook.pl/api/v1/doctors/${doctorId}`)
+                        fetch(`https://medibook.pl/api/v1/doctors`)
+                        .then(response2 => {
+                            if (!response2.ok) {
+                                throw new Error("Błąd sieci: " + response2.status);
+                            }
+
+                            return response2.json();
+                        })
+                        .then(data2 => {
+                            console.log("data2", data2);
+                            console.log(data.doctorId);
+
+                            for (let i = 0; i < data2.length; i++) {
+                                console.log(data2[i].id);
+
+                                if (data2[i].id === data.doctorId) {
+                                    doctor.innerText = `${data2[i].name} ${data2[i].lastName}`;
+                                    break;
+                                }
+                            }                                               
+                        });
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+                }
+
+                function confirmAppointment(event, doctorId) {
+                    event.preventDefault();
+
+                    const confirmData = {
+                        procedureId: parseInt(appointmentId),
+                        doctorId: doctorId,
+                        startTime: startTime.value + ":00",
+                        date: date.value
+                    };
+
+                    fetch(`https://medibook.pl/api/v1/visits/client`, {
+                        method: "POST",
+                        headers: {
+                            "Authorization": "Bearer " + clientToken,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(confirmData)
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            alert("Zapisano na wizytę"); // To zamienić na coś ładniejszego
+                            window.location.href = "https://medibook.pl/client"
+                        }
+                        else {
+                            alert("Błąd zapisu"); // To zamienić na coś ładniejszego
+                        }
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });                    
+                }
+
+                loadAll();
+            </script>
+        </section>
+    </body>
+</html>

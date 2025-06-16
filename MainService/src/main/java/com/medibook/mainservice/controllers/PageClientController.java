@@ -37,4 +37,9 @@ public class PageClientController {
     public String clientRedirect() {
         return "client/redirect";
     }
+
+    @GetMapping("/appointment")
+    public String clientAppointment() {
+        return "client/appointment";
+    }
 }

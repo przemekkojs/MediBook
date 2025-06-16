@@ -6,6 +6,9 @@ import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public record CreateVisitDto(long procedureId, String doctorId, LocalTime startTime, @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-
-}
+public record CreateVisitDto(
+    long procedureId,
+    String doctorId,
+    LocalTime startTime,
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
+) {}

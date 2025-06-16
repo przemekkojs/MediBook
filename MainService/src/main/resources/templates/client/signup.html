@@ -73,7 +73,7 @@
                         data.forEach(procedure => {
                             createRow(
                                 procedure.id,
-                                "", // Trzeba jakoś wstawić doktorka
+                                procedure.doctorId,
                                 procedure.name,
                                 procedure.description,
                                 procedure.price,
@@ -105,7 +105,8 @@
                 }
 
                 function makeAppointment(id) {
-                    
+                    const url = `https://medibook.pl/client/appointment?id=${id}`;
+                    window.location.href = url;
                 }
 
                 load();

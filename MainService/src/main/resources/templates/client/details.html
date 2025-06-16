@@ -13,7 +13,7 @@
 
             <div class="card p-3 shadow-sm">
                 <div class="row mb-2">
-                    <div class="col-sm-3 fw-bold">Pacjent:</div>
+                    <div class="col-sm-3 fw-bold">Doktor:</div>
                     <div class="col-sm-9" id="patient"></div>
                 </div>
                 <div class="row mb-2">
@@ -28,14 +28,6 @@
                     <div class="col-sm-3 fw-bold">Data:</div>
                     <div class="col-sm-9" id="date"></div>
                 </div>
-                <div class="row mb-2">
-                    <div class="col-sm-3 fw-bold">Sala:</div>
-                    <div class="col-sm-9" id="room"></div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-3 fw-bold">Miejsce:</div>
-                    <div class="col-sm-9" id="place"></div>
-                </div>
             </div>
 
             <script src="/js/userId.js"></script>
@@ -45,8 +37,6 @@
                 const begin = document.getElementById('begin');
                 const end = document.getElementById('end');
                 const date = document.getElementById('date');
-                const room = document.getElementById('room');
-                const place = document.getElementById('place');
 
                 function loadAll() {
                     console.log("loadAll()");
