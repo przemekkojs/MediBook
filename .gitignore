@@ -8,3 +8,5 @@ master-realm-export.json
 docker-compose.yml
 rebuild.bat
 rebuild.sh
+/Keycloak/crt/
+/NotificationService/crt/
