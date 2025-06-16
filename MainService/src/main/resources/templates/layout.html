@@ -52,7 +52,7 @@
                                     <li><a class="dropdown-item" th:href="@{${homePath} + '/account'}">Ustawienia</a></li>
                                     <li th:if="${#strings.contains(homePath, 'doctor')}"><a class="dropdown-item" th:href="'https://medibook.pl/oauth/realms/doctor/account'" target="_blank" rel="noopener noreferrer">Konto</a></li>
                                     <li th:if="${#strings.contains(homePath, 'client')}"><a class="dropdown-item" th:href="'https://medibook.pl/oauth/realms/client/account'" target="_blank" rel="noopener noreferrer">Konto</a></li>
-                                    <li><a class="dropdown-item" th:href="@{/}">Wyloguj</a></li>
+                                    <li><a class="dropdown-item" onclick="logout()">Wyloguj</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -65,6 +65,15 @@
             <article layout:fragment="content" class="flex-grow-1 bg-light">
                 <!-- Wypełniane przez content innych stron -->
             </article>
+
+            <script>
+                function logout(event) {
+                    event.preventDefault();
+                    document.cookie = "acces_token_client=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                    document.cookie = "acces_token_doctor=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                    window.location.href = "/";
+                }
+            </script>
         </main>
 
         <footer>
