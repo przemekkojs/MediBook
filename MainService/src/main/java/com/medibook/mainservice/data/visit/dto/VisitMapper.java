@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 public class VisitMapper {
     public VisitDto toVisitDto(Visit visit) {
         return new VisitDto(
+            visit.getId(),
             visit.getClient().getId(),
             visit.getDoctor().getId(),
             visit.getState().toString(),

@@ -1,6 +1,7 @@
 package com.medibook.mainservice.data.visit.dto;
 
 public record VisitDto(
+    long visitId,
     String clientId,
     String doctorId,
     String visitState,
