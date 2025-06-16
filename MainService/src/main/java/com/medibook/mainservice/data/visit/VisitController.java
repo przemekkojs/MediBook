@@ -77,7 +77,7 @@ public class VisitController {
         );
     }
 
-    @DeleteMapping("/cleint/cancel/{id}")
+    @DeleteMapping("/client/cancel/{id}")
     public ResponseEntity<VisitDto> cancelVisitClient(@PathVariable long id, JwtAuthenticationToken auth) {
         String username = auth.getToken().getClaimAsString(StandardClaimNames.PREFERRED_USERNAME);
 

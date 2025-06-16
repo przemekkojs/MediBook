@@ -42,10 +42,10 @@
                 function loadVisits() {
                     console.log("loadVisits()");
 
-                    fetch(`https://medibook.pl/api/v1/visits/doctor`, {
+                    fetch("https://medibook.pl/api/v1/visits/client", {
                         method: "GET",
                         headers: {
-                            "Authorization": "Bearer " + doctorToken,
+                            "Authorization": "Bearer " + clientToken,
                             "Content-Type": "application/json"
                         }
                     })
@@ -58,40 +58,127 @@
                     })
                     .then(data => {
                         console.log(data);
+                        
+                        data.forEach(element => {
+                            const clientId = element.clientId;
+                            const date = element.date;
+                            const doctorId = element.doctorId;
+                            const procedureId = element.procedureId;
+                            const status = element.visitState;
+                            const visitId = element.visitId;
+                            const from = element.startTime;
+                            let patientName = "";                            
+                            let to = "";
+                            let name = "";
+                            let description = "";
+                            let duration = "";
 
-                        // TODO
+                            fetch(`https://medibook.pl/api/v1/clients`)
+                            .then(response2 => {
+                                if (!response2.ok) {
+                                    throw new Error("Błąd sieci: " + response2.status);
+                                }
+
+                                return response2.json();
+                            })
+                            .then(data2 => {
+                                console.log("patient load", data2);
+
+                                for (let i = 0; i < data2.length; i++) {
+                                    if (data2[i].id === clientId) {
+                                        doctorName = `${data2[i].name} ${data2[i].lastName}`;
+                                        break;
+                                    }
+                                }       
+                                
+                                fetch(`https://medibook.pl/api/v1/procedures/${[procedureId]}`)
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error("Błąd sieci: " + response.status);
+                                    }
+
+                                    return response.json();
+                                })
+                                .then(data => {
+                                    console.log("procedure load", data);
+
+                                    name = data.name;
+                                    description = data.description;
+                                    duration = data.length;
+
+                                    console.log("row", visitId, date, from, patientName, name, description, duration, status);
+                                    addChild(visitId, date, from, patientName, name, description, duration, status);
+                                });                                
+                            });                            
+                        });
                     })
                     .catch(error => {
                         console.error(error);
                     });
                 }
 
-                function addChild(id, date, from, to, patient, room) {
+                function addChild(id, date, from, patient, name, description, duration, status) {
                     const toAdd = document.createElement('tr');
-                    const encode = str => encodeURIComponent(str);
 
-                    toAdd.innerHTML = `
-                        <td>${date}</td>
-                        <td>${from}</td>
-                        <td>${to}</td>
-                        <td>${patient}</td>
-                        <td>${room}</td>
+                    if (status == "CREATED") {
+                        toAdd.innerHTML = `
+                            <td>${date}</td>
+                            <td>${from}</td>
+                            <td>${patient}</td>
+                            <td>${name}</td>
+                            <td>${description}</td>
+                            <td>${duration}</td>
+                            <td>${status}</td>
 
-                        <td>
-                            <button class="btn btn-outline-primary btn-sm" onclick="details('${encode(id)}')">Szczegóły</button>
-                            <button class="btn btn-outline-danger btn-sm" onclick="cancel('${encode(id)}')">Odwołaj</button>
-                        </td>
-                    `;
+                            <td>
+                                <button class="btn btn-outline-primary btn-sm" onclick="details('${id}')">Szczegóły</button>
+                                <button class="btn btn-outline-danger btn-sm" onclick="cancel('${id}')">Odwołaj</button>
+                            </td>
+                        `;
+                    }
+                    else {
+                        toAdd.innerHTML = `
+                            <td>${date}</td>
+                            <td>${from}</td>
+                            <td>${patient}</td>
+                            <td>${name}</td>
+                            <td>${description}</td>
+                            <td>${duration}</td>
+                            <td>${status}</td>
+
+                            <td>
+                                <button class="btn btn-outline-primary btn-sm" onclick="details('${id}')">Szczegóły</button>
+                            </td>
+                        `;
+                    }                    
 
                     tbody.appendChild(toAdd);
                 }
 
                 function details(id) {
-                    window.location.href = `https://medibook.pl/doctor/details?id=${id}`;
+                    alert("Tu powinno być przekierowanie do czytelniejszego ekranu...");
                 }
 
                 function cancel(id) {
-                    
+                    if(!confirm("Czy na pewno chcesz odwołać wizytę?"))
+                        return;
+
+                    fetch(`https://medibook.pl/api/v1/visits/doctor/cancel/${id}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': 'Bearer ' + doctorToken
+                        }
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        console.log(data);
+                        alert('Pomyślnie odwołano wizytę');
+                        window.location.reload();
+                    })
+                    .catch(error => {
+                        alert('Błąd przy anulowaniu wizyty');
+                        console.error(error);
+                    });
                 }
 
                 loadVisits();
