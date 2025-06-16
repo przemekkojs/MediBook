@@ -5,6 +5,7 @@ import com.medibook.mainservice.data.client.IClientService;
 import com.medibook.mainservice.data.client.dto.ClientDTO;
 import com.medibook.mainservice.data.doctor.Doctor;
 import com.medibook.mainservice.data.doctor.IDoctorService;
+import com.medibook.mainservice.data.doctor.dto.DoctorDto;
 import com.medibook.mainservice.data.procedure.IProcedureService;
 import com.medibook.mainservice.data.procedure.Procedure;
 import com.medibook.mainservice.data.visit.dto.CreateVisitDto;
@@ -17,6 +18,7 @@ import com.medibook.mainservice.tools.rabbitmq.RabbitMQService;
 import com.medibook.mainservice.tools.rabbitmq.dto.ClientVisitConfirmation;
 import com.medibook.mainservice.util.exception.ApplicationException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +28,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class VisitServiceImpl implements IVisitService {
@@ -87,18 +90,25 @@ public class VisitServiceImpl implements IVisitService {
 
         visit = visitRepository.save(visit);
 
-        ClientDTO clientDTO = keycloakService.getClientByUsername(client.getUsername());
 
-        ClientVisitConfirmation confirmation =
-                ClientVisitConfirmation.builder()
-                        .doctorName(doctor.getUsername())
-                        .clientName(clientDTO.name() + " " + clientDTO.lastName())
-                        .clientEmail(clientDTO.email())
-                        .visitTime(visit.getStartTime().toString())
-                        .visitDate(visit.getDate().toString())
-                        .build();
+        try {
 
-        rabbitMQService.sendClientVisitNotificationMessage(confirmation);
+            ClientDTO clientDTO = keycloakService.getClientByUsername(client.getUsername());
+            DoctorDto doctorDTO = keycloakService.getDoctorByUsername(doctor.getUsername());
+            ClientVisitConfirmation confirmation =
+                    ClientVisitConfirmation.builder()
+                            .doctorName(doctorDTO.name() + " " + doctorDTO.lastName())
+                            .clientName(clientDTO.name() + " " + clientDTO.lastName())
+                            .clientEmail(clientDTO.email())
+                            .visitTime(visit.getStartTime().toString())
+                            .visitDate(visit.getDate().toString())
+                            .build();
+            rabbitMQService.sendClientVisitNotificationMessage(confirmation);
+        }catch (Exception e){
+            log.warn("Mail message not sent because of following error: " + e.getMessage());
+        }
+
+
 
         return visit;
     }
