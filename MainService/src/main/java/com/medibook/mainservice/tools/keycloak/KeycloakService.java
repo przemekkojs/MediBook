@@ -75,6 +75,11 @@ public class KeycloakService {
         Keycloak keycloak = getKeycloak(clientRealm);
 
         UserResource userResource = keycloak.realm(clientRealm).users().get(id);
+
+        if(userResource == null){
+            return null;
+        }
+
         UserRepresentation user = userResource.toRepresentation();
 
         if(user == null) {
@@ -82,12 +87,14 @@ public class KeycloakService {
         }
 
         return new ClientDTO(
-            user.getId(),
-            user.getUsername(),
-            user.getFirstName(),
-            user.getLastName(),
-            user.getEmail(),
-            ""
+                user.getId(),
+                user.getUsername(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getAttributes().containsKey("phoneNumber")?
+                        user.getAttributes().get("phoneNumber").get(0) :
+                        ""
         );
     }
 
@@ -95,6 +102,11 @@ public class KeycloakService {
         Keycloak keycloak = getKeycloak(doctorRealm);
 
         UserResource userResource = keycloak.realm(doctorRealm).users().get(id);
+
+        if(userResource == null){
+            return null;
+        }
+
         UserRepresentation user = userResource.toRepresentation();
 
         if(user == null) {
@@ -145,7 +157,9 @@ public class KeycloakService {
                 user.getFirstName(),
                 user.getLastName(),
                 user.getEmail(),
-                ""
+                user.getAttributes().containsKey("phoneNumber")?
+                        user.getAttributes().get("phoneNumber").get(0) :
+                        ""
         );
     }
 
@@ -172,7 +186,9 @@ public class KeycloakService {
                 userResource.getFirstName(),
                 userResource.getLastName(),
                 userResource.getEmail(),
-                ""
+                userResource.getAttributes().containsKey("phoneNumber")?
+                        userResource.getAttributes().get("phoneNumber").get(0) :
+                        ""
         )).toList();
     }
 
