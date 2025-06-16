@@ -88,9 +88,7 @@ public class KeycloakService {
                 user.getFirstName(),
                 user.getLastName(),
                 user.getEmail(),
-                user.getAttributes().containsKey("phoneNumber")?
-                        user.getAttributes().get("phoneNumber").get(0) :
-                        ""
+                getPhoneNumber(user)
         );
     }
 
@@ -149,9 +147,7 @@ public class KeycloakService {
                 user.getFirstName(),
                 user.getLastName(),
                 user.getEmail(),
-                user.getAttributes().containsKey("phoneNumber")?
-                        user.getAttributes().get("phoneNumber").get(0) :
-                        ""
+                getPhoneNumber(user)
         );
     }
 
@@ -178,10 +174,15 @@ public class KeycloakService {
                 userResource.getFirstName(),
                 userResource.getLastName(),
                 userResource.getEmail(),
-                userResource.getAttributes().containsKey("phoneNumber")?
-                        userResource.getAttributes().get("phoneNumber").get(0) :
-                        ""
+                getPhoneNumber(userResource)
         )).toList();
+    }
+
+    public String getPhoneNumber(UserRepresentation userRepresentation){
+        if (userRepresentation.getAttributes() != null && userRepresentation.getAttributes().containsKey("phoneNumber")) {
+            return userRepresentation.getAttributes().get("phoneNumber").get(0);
+        }
+        return "";
     }
 
 }
