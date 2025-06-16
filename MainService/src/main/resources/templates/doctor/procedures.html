@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{doctor/layout-doctor}">
+
+    <head>
+        <title layout:fragment="title">Zabiegi</title>
+    </head>
+
+    <body>
+        <section layout:fragment="content">
+            <div class="container my-4">
+                <h3 class="mb-3">Zabiegi</h3>
+
+                <div class="container my-4">
+                    <div id="working-hours-list">
+                        <table class="table table-bordered table-striped align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th scope="col">Nazwa</th>
+                                    <th scope="col">Opis</th>
+                                    <th scope="col">Cena</th>
+                                    <th scope="col">Czas trwania</th>
+                                    <th scope="col">Akcja</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="tbody">
+                                <!-- JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <hr class="my-4">
+
+                <h3 class="mb-3">Dodaj zabiegi</h3>
+
+                <form id="working-hours-form" class="d-flex flex-wrap align-items-end gap-3">
+                    <input type="hidden" id="id">
+
+                    <div>
+                        <label for="name" class="form-label">Nazwa</label>
+                        <input type="text" id="name" name="name" class="form-control" required>
+                    </div>
+
+                    <div>
+                        <label for="description" class="form-label">Opis</label>
+                        <input type="text" id="description" name="description" class="form-control" required>
+                    </div>
+
+                    <div>
+                        <label for="price" class="form-label">Cena</label>
+                        <input type="number" id="price" name="price" class="form-control" required>
+                    </div>
+
+                    <div>
+                        <label for="duration" class="form-label">Czas trwania (w minutach)</label>
+                        <input type="number" id="duration" name="duration" class="form-control" required>
+                    </div>
+
+                    <div>
+                        <button type="button" class="btn btn-primary mt-4" onclick="addProcedure(event)">Dodaj</button>
+                    </div>
+                </form>
+            </div>
+
+            <script src="/js/userId.js"></script>
+
+            <!-- Godziny pracy -->
+            <script>
+                const tbody = document.getElementById('tbody');
+
+                function loadProcedures() {
+                    console.log("loadWorkhours()");
+
+                    fetch(`https://medibook.pl/api/v1/procedures/doctor/token`, {
+                        method: "GET",
+                        headers: {
+                            "Authorization": "Bearer " + doctorToken,
+                            "Content-Type": "application/json"
+                        }
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error("Błąd sieci: " + response.status);
+                        }
+
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log(data);
+                        
+                        data.forEach(element => {
+                            const id = element.id;
+                            const n = element.name;
+                            const dsc = element.description;
+                            const p = element.price;
+                            const dur = element.length;                           
+
+                            console.log(dur);
+                            const hms = hmsToMinutes(dur);
+                            console.log(hms);
+
+                            addChild(id, n, dsc, p, hms);
+                        });
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });                    
+                }
+
+                function minutesToHMS(minutes) {
+                    const mins = parseInt(minutes);
+
+                    const h = Math.floor(mins / 60);
+                    const m = mins % 60;
+                    return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:00`;
+                }
+
+                function hmsToMinutes(hms) {
+                    const [hours, minutes, seconds] = hms.split(':').map(Number);
+
+                    if (isNaN(hours) || isNaN(minutes) || isNaN(seconds)) {
+                        throw new Error('Nieprawidłowy format czasu. Oczekiwano HH:MM:SS');
+                    }
+
+                    return hours * 60 + minutes + seconds / 60;
+                }
+
+                function addChild(id, name, description, price, duration) {
+                    const toAdd = document.createElement('tr');
+                    const encode = str => encodeURIComponent(str);
+
+                    toAdd.innerHTML = `
+                        <td><input type="text" id="name-${id}" name="name" class="form-control" required></td>
+                        <td><input type="text" id="description-${id}" name="description" class="form-control" required></td>
+                        <td><input type="number" id="price-${id}" name="price" class="form-control" required></td>
+                        <td><input type="number" id="duration-${id}" name="duration" class="form-control" required></td>
+
+                        <td>
+                            <button class="btn btn-outline-primary btn-sm me-1" onclick="editProcedure('${encode(id)}')">Edytuj</button>
+                            <button class="btn btn-outline-danger btn-sm" onclick="deleteProcedure('${encode(id)}')">Usuń</button>
+                        </td>
+                    `;
+
+                    tbody.appendChild(toAdd);
+                    
+                    document.getElementById(`name-${id}`).value = name;
+                    document.getElementById(`description-${id}`).value = description;
+                    document.getElementById(`price-${id}`).value = price;
+                    document.getElementById(`duration-${id}`).value = duration;
+                }
+
+                loadProcedures();
+            </script>
+
+            <!-- Operacje -->
+            <script>
+                function deleteProcedure(id) {
+                    if (!confirm("Czy na pewno chcesz usunąć ten zabieg?"))
+                        return;
+
+                    fetch(`https://medibook.pl/api/v1/procedures/doctor/${id}`, {
+                        method: "DELETE",
+                        headers: {
+                            "Authorization": "Bearer " + doctorToken,
+                            "Content-Type": "application/json" 
+                        }
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            alert("Zabieg został usunięty.");
+                            location.reload();
+                        }
+                        else {
+                            alert("Wystąpił błąd podczas usuwania zabiegu.");
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Błąd:", error);
+                        alert("Nie udało się połączyć z serwerem.");
+                    });
+                }
+
+                function editProcedure(id) {
+                    const n = document.getElementById(`name-${id}`).value;
+                    const dsc = document.getElementById(`description-${id}`).value;
+                    const p = document.getElementById(`price-${id}`).value;
+                    const dur = document.getElementById(`duration-${id}`).value;
+                    const hms = minutesToHMS(dur);
+
+                    const data = {
+                        name: n,
+                        description: dsc,
+                        price: p,
+                        length: hms
+                    };
+
+                    fetch(`https://medibook.pl/api/v1/procedures/doctor/${id}`, {
+                        method: "PUT",
+                        headers: {
+                            "Authorization": "Bearer " + doctorToken,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(data)
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            alert("Zabieg został zaktualizowany.");
+                            location.reload();
+                        }
+                        else {
+                            alert("Wystąpił błąd podczas edycji zabiegu.");
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Błąd:", error);
+                        alert("Nie udało się połączyć z serwerem.");
+                    });
+                }
+                
+                function addProcedure(event) {
+                    event.preventDefault();
+                    
+                    const n = document.getElementById('name').value;
+                    const dsc = document.getElementById('description').value;
+                    const p = document.getElementById('price').value;
+                    const dur = document.getElementById('duration').value;
+                    const hms = minutesToHMS(dur);
+
+                    const data = {
+                        name: n,
+                        description: dsc,
+                        price: p,
+                        length: hms
+                    };
+
+                    fetch("https://medibook.pl/api/v1/procedures/doctor", {
+                        method: "POST",
+                        headers: {
+                            "Authorization": "Bearer " + doctorToken,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(data)
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            alert("Zabieg został dodany.");
+                            location.reload();
+                        }
+                        else {
+                            alert("Wystąpił błąd podczas dodawania zabiegu.");
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Błąd:", error);
+                        alert("Nie udało się połączyć z serwerem.");
+                    });
+                }
+            </script>
+        </section>
+    </body>
+</html>

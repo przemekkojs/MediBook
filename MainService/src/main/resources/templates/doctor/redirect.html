@@ -11,7 +11,7 @@
 
                 if (!code) {
                     console.error("Brak kodu autoryzacyjnego w URL.");
-                    //window.location.href = "https://medibook.pl/error";
+                    window.location.href = "https://medibook.pl/error";
                     return;
                 }
 
@@ -38,7 +38,7 @@
                     return response.json();
                 })
                 .then(data => {
-                    const seconds = 30;
+                    const seconds = 300;
 
                     const expiresInSeconds = data.expires_in || seconds;
                     const expiryDate = new Date(Date.now() + expiresInSeconds * 1000);

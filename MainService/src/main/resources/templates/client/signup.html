@@ -18,18 +18,7 @@
                             <label for="doctor" class="form-label">Lekarz</label>
                             <input type="text" class="form-control" id="doctor" placeholder="Wpisz...">
                         </div>
-                        <div class="col-md-3">
-                            <label for="specialization" class="form-label">Specjalizacja</label>
-                            <input type="text" class="form-control" id="specialization" placeholder="Wpisz...">
-                        </div>
-                        <div class="col-md-2">
-                            <label for="date" class="form-label">Data</label>
-                            <input type="date" class="form-control" id="date">
-                        </div>
-                        <div class="col-md-2">
-                            <label for="place" class="form-label">Miejsce</label>
-                            <input type="text" class="form-control" id="place" placeholder="Szpital Wrocław">
-                        </div>
+
                         <div class="col-md-2">
                             <button type="button" class="btn btn-primary w-100" onclick="load()">Filtruj</button>
                         </div>
@@ -41,12 +30,10 @@
                         <thead class="table-light">
                             <tr>
                                 <th>Lekarz</th>
-                                <th>Specjalizacja</th>
-                                <th>Miejsce</th>
-                                <th>Sala</th>
-                                <th>Data</th>
-                                <th>Godzina rozpoczęcia</th>
-                                <th>Godzina zakończenia</th>
+                                <th>Nazwa</th>
+                                <th>Opis</th>
+                                <th>Cena</th>
+                                <th>Czas trwania</th>                                
                                 <th>Akcja</th>
                             </tr>
                         </thead>
@@ -56,8 +43,13 @@
                         </tbody>
                     </table>
                 </div>
+
+                <form>
+
+                </form>
             </div>
 
+            <script src="/js/userId.js"></script>
 
             <script>
                 const tbody = document.getElementById('tbody');
@@ -66,11 +58,8 @@
                     console.log("load()");
 
                     const doctor = document.getElementById('doctor').value;
-                    const specialization = document.getElementById('specialization').value;
-                    const date = document.getElementById('date').value;
-                    const place = document.getElementById('place').value;
 
-                    fetch("http://medibook.pl/api/v1/doctors")
+                    fetch("https://medibook.pl/api/v1/procedures")
                     .then(response => {
                         if (!response.ok) {
                             throw new Error("Błąd sieci: " + response.status);
@@ -80,22 +69,32 @@
                     })
                     .then(data => {
                         console.log(data);
+
+                        data.forEach(procedure => {
+                            createRow(
+                                procedure.id,
+                                "", // Trzeba jakoś wstawić doktorka
+                                procedure.name,
+                                procedure.description,
+                                procedure.price,
+                                procedure.length
+                            )
+                        });
                     })
                     .catch(error => {
                         console.error(error);
                     });
                 }
 
-                function createRow(id, doctor, spec, place, room, date, startHour, endHour) {
+                function createRow(id, doctor, name, description, price, duration) {
                     const row = document.createElement('tr');
+                    
                     row.innerHTML = `
                         <td>${doctor}</td>
-                        <td>${spec}</td>
-                        <td>${place}</td>
-                        <td>${room}</td>
-                        <td>${date}</td>
-                        <td>${startHour}</td>
-                        <td>${endHour}</td>
+                        <td>${name}</td>
+                        <td>${description}</td>
+                        <td>${price}</td>
+                        <td>${duration}</td>
 
                         <td>
                             <button class="btn btn-success btn-sm" onclick="makeAppointment('${id}')">Zarezerwuj</button>
@@ -106,7 +105,7 @@
                 }
 
                 function makeAppointment(id) {
-
+                    
                 }
 
                 load();

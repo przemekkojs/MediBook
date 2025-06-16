@@ -66,7 +66,7 @@ public class ProcedureController {
 
         return ResponseEntity.ok(
             procedureMapper.toProcedureDto(
-                    procedureService.createProcedure(dto, username)
+                procedureService.createProcedure(dto, username)
             )
         );
     }
@@ -81,7 +81,7 @@ public class ProcedureController {
     }
 
     @DeleteMapping("/doctor/{id}")
-    public void deleteProcedure(long id) {
+    public void deleteProcedure(@PathVariable long id) {
         procedureService.deleteProcedure(id);
     }
 }

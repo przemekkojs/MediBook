@@ -27,4 +27,5 @@ else if (doctorToken != null) {
 }
 else {
     console.log("Nie ma ciasteczka ani dla doktora ani dla klienta");
+    window.location.href = "https://medibook.pl/login";
 }

@@ -34,6 +34,8 @@
                 </div>
             </div>
 
+            <script src="/js/userId.js"></script>
+
             <script>
                 const patient = document.getElementById('patient');
                 const begin = document.getElementById('begin');
@@ -53,7 +55,13 @@
                 function loadDetails(id) {
                     console.log(`loadDetails(id=${id})`);
 
-                    fetch(`https://medibook.pl/api/v1/visits/${id}`)
+                    fetch(`https://medibook.pl/api/v1/visits/${id}`, {
+                        method: "GET",
+                        headers: {
+                            "Authorization": "Bearer " + doctorToken,
+                            "Content-Type": "application/json"
+                        }
+                    })
                     .then(response => {
                         if (!response.ok) {
                             throw new Error("Błąd sieci: " + response.status);

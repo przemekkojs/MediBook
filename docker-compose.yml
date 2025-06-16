@@ -52,7 +52,7 @@ services:
       - ./ssl/domain.crt:/ssl/domain.crt
       - ./ssl/domain.key:/ssl/domain.key
       - ./ssl/rootCA.crt:/ssl/rootCA.crt
-      - ./init-postgres.sh:/docker-entrypoint-initdb.d/init-postgres.sh:ro
+      - ./init-postgres.sh:/docker-entrypoint-initdb.d/init-postgres.sh
 
   authorization-db:
     image: postgres:16

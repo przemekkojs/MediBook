@@ -74,7 +74,13 @@
                 function loadHeader() {
                     console.log("loadHeader()");
 
-                    fetch(`https://medibook.pl/api/v1/clients/clients/client/token/${clientToken}`)
+                    fetch(`https://medibook.pl/api/v1/clients/client/token`, {
+                        method: "GET",
+                        headers: {
+                            "Authorization": "Bearer " + clientToken,
+                            "Content-Type": "application/json"
+                        }
+                    })
                     .then(response => {
                         if (!response.ok) {
                             throw new Error("Błąd sieci: " + response.status);
@@ -84,6 +90,10 @@
                     })
                     .then(data => {
                         console.log(data);
+                        const n = data.name;
+                        const ln = data.lastName;
+
+                        header.innerText = `Witaj, ${n} ${ln}`;
                     })
                     .catch(error => {
                         console.error(error);
@@ -93,7 +103,13 @@
                 function loadNextVisit() {
                     console.log("loadNextVisit()");
 
-                    fetch(`https://medibook.pl/api/v1/visits/client/${clientToken}`)
+                    fetch(`https://medibook.pl/api/v1/visits/client`, {
+                        method: "GET",
+                        headers: {
+                            "Authorization": "Bearer " + clientToken,
+                            "Content-Type": "application/json"
+                        }
+                    })
                     .then(response => {
                         if (!response.ok) {
                             throw new Error("Błąd sieci: " + response.status);

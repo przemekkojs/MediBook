@@ -75,7 +75,7 @@
                 function loadHeader() {
                     console.log("loadHeader()");
 
-                    fetch(`https://medibook.pl/api/v1/doctors/doctor/token/`, {
+                    fetch(`https://medibook.pl/api/v1/doctors/doctor/token`, {
                         method: "GET",
                         headers: {
                             "Authorization": "Bearer " + doctorToken,
@@ -91,6 +91,10 @@
                     })
                     .then(data => {
                         console.log(data);
+                        const n = data.name;
+                        const ln = data.lastName;
+
+                        header.innerText = `Witaj, ${n} ${ln}`;
                     })
                     .catch(error => {
                         console.error(error);
@@ -100,7 +104,13 @@
                 function loadDay() {
                     console.log("loadDay()");
 
-                    fetch(`https://medibook.pl/api/v1/visits/doctor`)
+                    fetch(`https://medibook.pl/api/v1/visits/doctor`, {
+                        method: "GET",
+                        headers: {
+                            "Authorization": "Bearer " + doctorToken,
+                            "Content-Type": "application/json"
+                        }
+                    })
                     .then(response => {
                         if (!response.ok) {
                             throw new Error("Błąd sieci: " + response.status);
@@ -136,7 +146,13 @@
                     endHour.innerText = "";
                     id.value = "";
 
-                    fetch(`https://medibook.pl/api/v1/visits/doctor`)
+                    fetch(`https://medibook.pl/api/v1/visits/doctor`, {
+                        method: "GET",
+                        headers: {
+                            "Authorization": "Bearer " + doctorToken,
+                            "Content-Type": "application/json"
+                        }
+                    })
                     .then(response => {
                         if (!response.ok) {
                             throw new Error("Błąd sieci: " + response.status);
